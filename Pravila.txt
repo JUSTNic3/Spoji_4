@@ -1,0 +1,4 @@
+	Pravila igre	
+-Trebate skupiti 4 žetona iste boje u nizu: okomito, vodoravno ili dijagonalno.
+-Možete baciti samo jedan žeton po okretu.
+-Prvi igraè koji spoji 4 jednobojna žetona pobjeðuje.
