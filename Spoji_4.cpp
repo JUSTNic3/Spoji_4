@@ -24,8 +24,13 @@ int main()
         int izbor;
         cin >> izbor;
         if (izbor == 1){
+
         }
         else if (izbor == 2){
+
+        }
+        else if (izbor == 3) {
+
         }
         else if(izbor == 4){
             cout << "Dovidjenja!";
@@ -37,13 +42,9 @@ int main()
        system("pause");
     }  
 }
-/*cout << "Dobrodošli u Spoji 4" << endl;
-    cout << "Odaberite 1 ako želite zapoèeti igru" << endl;
-    cout << "Odaberite 2 ako želite provjeriti pravila" << endl;
-    cout << "Odaberite 3 kako bi ste vidjeli vaše rezultate" << endl;
-    fstream datoteka("pravila", ios::app);*/
-/*
--poseban bin file ili odabir korisnika za pravila igre
+
+/* 
+- poseban bin file ili odabir korisnika za pravila igre
 -suèelje sa odabirom poèetka igre,pravila,imena igraèa riješeno
 -21 žeton za pojedinog igraèa
 -max 2 igraèa
