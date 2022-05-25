@@ -51,7 +51,12 @@ int main()
         }
         else if (izbor == 2){
             system("cls");
-            cout << "\t\t    CONNECT 4!" << endl;
+            //cout << "\t\t    CONNECT 4!" << endl;
+            cout << " ___   ___               ___  ___ _____" << endl;
+            cout << "|     |   | |\   | |\   | |    |      |           /|" << endl;
+            cout << "|     |   | | \  | | \  | |__  |      |          / |" << endl;
+            cout << "|     |   | |  \ | |  \ | |    |      |         /__|_" << endl;
+            cout << "|___  |___| |   \| |   \| |___ |___   |           |" << endl;
             cout << endl;
             char grid[6][8];
             for (int i = 0; i < 6; i++)
