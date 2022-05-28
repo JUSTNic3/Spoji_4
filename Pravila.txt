@@ -1,14 +1,6 @@
 	Pravila igre	
--Trebate skupiti 4 žetona iste boje u nizu: okomito, vodoravno ili dijagonalno.
--Možete baciti samo jedan žeton po okretu.
--Prvi igraè koji spoji 4 jednobojna žetona pobjeðuje.
-
-
-
-
-
-
-
-
-
+-Svaki igrac ima po 21 zeton (ukupno 42).
+-Trebate skupiti 4 zetona iste boje u nizu: okomito, vodoravno ili dijagonalno.
+-Mozete baciti samo jedan zeton po okretu.
+-Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.
 

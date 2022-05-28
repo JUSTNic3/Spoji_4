@@ -7,15 +7,15 @@ using namespace std;
 
 
 
-void show_grid(char grid[6][8])
+void show_grid(char ploca[6][8])
 {
    
     for (int i = 0; i < 6; i++)
     {
-        cout << "\t";
+        cout << "\t\t";
         for (int j = 0; j < 8; j++)
         {
-            cout << "|  " << grid[i][j];
+            cout << "|  " << ploca[i][j];
         }
         cout << "|" << endl;
     }
@@ -27,9 +27,10 @@ int main()
     if(!datoteka.is_open())
         datoteka.open("Pravila.txt", ios::app);
     datoteka << "\t" << "Pravila igre" << "\t" << endl;
-    datoteka << "-Trebate skupiti 4 žetona iste boje u nizu: okomito, vodoravno ili dijagonalno." << endl;
-    datoteka << "-Možete baciti samo jedan žeton po okretu." << endl;
-    datoteka << "-Prvi igraè koji spoji 4 jednobojna žetona pobjeðuje." << endl;
+    datoteka << "-Svaki igrac ima po 21 zeton (ukupno 42)." << endl;
+    datoteka << "-Trebate skupiti 4 zetona iste boje u nizu: okomito, vodoravno ili dijagonalno." << endl;
+    datoteka << "-Mozete baciti samo jedan zeton po okretu." << endl;
+    datoteka << "-Prvi igrac koji spoji 4 jednobojna zetona pobjeduje." << endl;
     datoteka.close();
     while (1)
     {
@@ -43,20 +44,28 @@ int main()
         int izbor;
         cin >> izbor;
         if (izbor == 1){
+            datoteka.open("Pravila.txt");
+            string redak;
+            while (!datoteka.eof()) {
+                getline(datoteka, redak);
+                cout << redak << endl;
+                if (datoteka.eof())break;
+            }
+            datoteka.close();
             datoteka.open("Pravila.txt", ios::app);
             string pravila;
-            getline(datoteka, pravila);
+            getline(cin, pravila);
             datoteka << pravila << endl;
             datoteka.close();
         }
         else if (izbor == 2){
             system("cls");
-            //cout << "\t\t    CONNECT 4!" << endl;
-            cout << " ___   ___               ___  ___ _____" << endl;
-            cout << "|     |   | |\   | |\   | |    |      |           /|" << endl;
-            cout << "|     |   | | \  | | \  | |__  |      |          / |" << endl;
-            cout << "|     |   | |  \ | |  \ | |    |      |         /__|_" << endl;
-            cout << "|___  |___| |   \| |   \| |___ |___   |           |" << endl;
+            cout << "\t ___   ___                 ___  ___ _____" << endl;
+            cout << "\t|     |   | |'   | |'   | |    |      |           /|" << endl;
+            cout << "\t|     |   | | '  | | '  | |__  |      |          / |" << endl;
+            cout << "\t|     |   | |  ' | |  ' | |    |      |         /__|_" << endl;
+            cout << "\t|___  |___| |   '| |   '| |___ |___   |           |" << endl;
+            cout << "___________________________________________________________________" << endl;
             cout << endl;
             char grid[6][8];
             for (int i = 0; i < 6; i++)
