@@ -106,8 +106,11 @@ int main()
 
             } while (nameCheck(player1, player2));
             cout << "ODABIR ZETONA" << endl << endl;
-            //dio koda
-            _getch();
+            cout << "Dio koda: " << endl
+                << "." << endl
+                << "." << endl
+                << "." << endl;
+            //_getch();
             //system("cls");
             cout << "\t ___   ___                 ___  ___ _____" << endl;
             cout << "\t|     |   | |'   | |'   | |    |      |           /|" << endl;
