@@ -42,15 +42,27 @@ void show_grid(char ploca[6][8])
 
 int main()
 {
-    fstream datoteka("Pravila.txt");
-    if(!datoteka.is_open())
+    string p1, p2, p3, p4, p5;
+    p1 = "\t\t Pravila";
+    p2 = "-Svaki igrac ima po 21 zeton (ukupno 42).";
+    p3 = "-Trebate skupiti 4 zetona iste boje u nizu: okomito, vodoravno ili dijagonalno.";
+    p4 = "-Mozete baciti samo jedan zeton po okretu.";
+    p5 = "-Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.";
+    fstream datoteka("Pravila.bin", ios::binary | ios::out);
+    datoteka.write((char*)&p1, sizeof(p1));
+    datoteka.write((char*)&p2, sizeof(p2));
+    datoteka.write((char*)&p3, sizeof(p3));
+    datoteka.write((char*)&p4, sizeof(p4));
+    datoteka.write((char*)&p5, sizeof(p5));
+    datoteka.close();
+    /*if (!datoteka.is_open())
         datoteka.open("Pravila.txt", ios::app);
     datoteka << "\t" << "Pravila igre" << "\t" << endl;
     datoteka << "-Svaki igrac ima po 21 zeton (ukupno 42)." << endl;
     datoteka << "-Trebate skupiti 4 zetona iste boje u nizu: okomito, vodoravno ili dijagonalno." << endl;
     datoteka << "-Mozete baciti samo jedan zeton po okretu." << endl;
     datoteka << "-Prvi igrac koji spoji 4 jednobojna zetona pobjeduje." << endl;
-    datoteka.close();
+    datoteka.close();*/
     while (1)
     {
         system("cls");
@@ -64,7 +76,19 @@ int main()
         cin >> izbor;
         cin.ignore();
         if (izbor == 1){
-            datoteka.open("Pravila.txt");
+            datoteka.open("Pravila.bin", ios::binary | ios::in);
+            datoteka.read((char*)&p1, sizeof(p1));
+            cout << p1 << endl;
+            datoteka.read((char*)&p2, sizeof(p2));
+            cout << p2 << endl;
+            datoteka.read((char*)&p3, sizeof(p3));
+            cout << p3 << endl;
+            datoteka.read((char*)&p4, sizeof(p4));
+            cout << p4 << endl;
+            datoteka.read((char*)&p5, sizeof(p5));
+            cout << p5 << endl;
+            datoteka.close();
+            /*datoteka.open("Pravila.txt");
             string redak;
             while (!datoteka.eof()) {
                 getline(datoteka, redak);
@@ -76,7 +100,7 @@ int main()
             string pravila;
             getline(cin, pravila);
             datoteka << pravila << endl;
-            datoteka.close();
+            datoteka.close();*/
         }
         else if (izbor == 2){
             system("cls");
