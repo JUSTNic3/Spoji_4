@@ -4,3 +4,4 @@
 -Mozete baciti samo jedan zeton po okretu.
 -Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.
 
+

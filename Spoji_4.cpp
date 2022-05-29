@@ -3,9 +3,28 @@
 #include <string>
 #include <algorithm>
 #include <cctype>
+#include <windows.h>
+#include <conio.h>
 using namespace std;
 
-
+bool nameCheck(string player1, string player2)
+{
+    /*remove koristimo za micanje razmaka(problem je mnozenje zadnjih slova nakon micanja razmaka
+    ,a to rjesavamo sa erase koji koristimo do kraja reda(inace imamo isti problem*/
+    player1.erase(remove(player1.begin(), player1.end(), ' '), player1.end());
+    player2.erase(remove(player2.begin(), player2.end(), ' '), player2.end());
+    //smanjenje svih slova
+    transform(player1.begin(), player1.end(), player1.begin(), tolower);
+    transform(player2.begin(), player2.end(), player2.begin(), tolower);
+    if (player1 == player2) {
+        cout << "\033[31m" << "Ime je vec upotrebljeno! Pokusajte ponovmo!" << "\033[0m" << endl;
+        return 1;
+    }
+    else {
+        cout << "\033[32m" << endl << "Ime 2. igraca (" << player2 << ") uspjesno dodano. :)" << "\033[0m" << endl << endl;
+        return 0;
+    }
+}
 
 void show_grid(char ploca[6][8])
 {
@@ -43,6 +62,7 @@ int main()
         cout << "Vas odabir: ";
         int izbor;
         cin >> izbor;
+        cin.ignore();
         if (izbor == 1){
             datoteka.open("Pravila.txt");
             string redak;
@@ -60,11 +80,40 @@ int main()
         }
         else if (izbor == 2){
             system("cls");
+            //unos imena igraca
+            string player1, player2;
+            //char token1, token2;
+            //char* likovi = new char[4]{ '+','-','x' };
+            //upis imena i provjera je li string prazan
+            cout << "ODABIR IMENA IGRACA" << endl << endl;
+            do {
+                cout << "Unesite ime 1. igraca: ";
+                getline(cin, player1);
+                if (player1.empty())
+                    cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
+            } while (player1.empty());
+            cout << "\033[32m" << endl << "Ime 1. igraca (" << player1 << ") uspjesno dodano. :)" << "\033[0m" << endl << endl;
+            /*upis imena i provjera je li string prazan te jesu li imena ista neovisno
+            o razamcima te velicini slova*/
+            do
+            {
+                do {
+                    cout << "Unesite ime 2. igraca: ";
+                    getline(cin, player2);
+                    if (player2.empty())
+                        cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
+                } while (player2.empty());
+
+            } while (nameCheck(player1, player2));
+            cout << "ODABIR ZETONA" << endl << endl;
+            //dio koda
+            _getch();
+            //system("cls");
             cout << "\t ___   ___                 ___  ___ _____" << endl;
             cout << "\t|     |   | |'   | |'   | |    |      |           /|" << endl;
             cout << "\t|     |   | | '  | | '  | |__  |      |          / |" << endl;
             cout << "\t|     |   | |  ' | |  ' | |    |      |         /__|_" << endl;
-            cout << "\t|___  |___| |   '| |   '| |___ |___   |           |" << endl;
+            cout << "\t|___  |___| |   '| |   '| |___ |___   |            |" << endl;
             cout << "___________________________________________________________________" << endl;
             cout << endl;
             char grid[6][8];
