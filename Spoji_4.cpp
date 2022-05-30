@@ -5,7 +5,7 @@
 #include <cctype>
 #include <windows.h>
 #include <conio.h>
-#include<ctime>
+#include <ctime>
 using namespace std;
 
 int printRandomToken(int index)
@@ -39,12 +39,12 @@ void show_grid(char ploca[6][8])
    
     for (int i = 0; i < 6; i++)
     {
-        cout << "\t\t";
+        cout << "\t       ";
         for (int j = 0; j < 8; j++)
         {
-            cout << "|  " << ploca[i][j];
+            cout << "[  ]" << ploca[i][j];
         }
-        cout << "|" << endl;
+        cout << endl;
     }
 }
 
@@ -63,14 +63,6 @@ int main()
     datoteka.write((char*)&p4, sizeof(p4));
     datoteka.write((char*)&p5, sizeof(p5));
     datoteka.close();
-    /*if (!datoteka.is_open())
-        datoteka.open("Pravila.txt", ios::app);
-    datoteka << "\t" << "Pravila igre" << "\t" << endl;
-    datoteka << "-Svaki igrac ima po 21 zeton (ukupno 42)." << endl;
-    datoteka << "-Trebate skupiti 4 zetona iste boje u nizu: okomito, vodoravno ili dijagonalno." << endl;
-    datoteka << "-Mozete baciti samo jedan zeton po okretu." << endl;
-    datoteka << "-Prvi igrac koji spoji 4 jednobojna zetona pobjeduje." << endl;
-    datoteka.close();*/
     while (1)
     {
         system("cls");
@@ -95,20 +87,7 @@ int main()
             cout << p4 << endl;
             datoteka.read((char*)&p5, sizeof(p5));
             cout << p5 << endl;
-            datoteka.close();
-            /*datoteka.open("Pravila.txt");
-            string redak;
-            while (!datoteka.eof()) {
-                getline(datoteka, redak);
-                cout << redak << endl;
-                if (datoteka.eof())break;
-            }
-            datoteka.close();
-            datoteka.open("Pravila.txt", ios::app);
-            string pravila;
-            getline(cin, pravila);
-            datoteka << pravila << endl;
-            datoteka.close();*/
+            datoteka.close(); 
         }
         else if (izbor == 2){
             system("cls");
@@ -149,13 +128,13 @@ int main()
             } while (token1 == token2);
             cout << "Zeton 2. igraca ce biti: " << "\033[32m" << token2 << "\033[0m" << endl;
             //_getch();
-            //system("cls");
+            system("cls");
             cout << "\t ___   ___                 ___  ___ _____" << endl;
-            cout << "\t|     |   | |'   | |'   | |    |      |           /|" << endl;
-            cout << "\t|     |   | | '  | | '  | |__  |      |          / |" << endl;
-            cout << "\t|     |   | |  ' | |  ' | |    |      |         /__|_" << endl;
-            cout << "\t|___  |___| |   '| |   '| |___ |___   |            |" << endl;
-            cout << "___________________________________________________________________" << endl;
+            cout << "\t|     |   | |'   | |'   | |    |      |          /|" << endl;
+            cout << "\t|     |   | | '  | | '  | |__  |      |         / |" << endl;
+            cout << "\t|     |   | |  ' | |  ' | |    |      |        /__|_" << endl;
+            cout << "\t|___  |___| |   '| |   '| |___ |___   |           |" << endl;
+            cout << "       _____________________________________________________" << endl;
             cout << endl;
             char grid[6][8];
             for (int i = 0; i < 6; i++)
