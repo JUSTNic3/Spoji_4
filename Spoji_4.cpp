@@ -5,7 +5,15 @@
 #include <cctype>
 #include <windows.h>
 #include <conio.h>
+#include<ctime>
 using namespace std;
+
+int printRandomToken(int index)
+{
+    for (int i = 0; i < 4; i++)
+        index = rand() % 4;
+    return index;
+}
 
 bool nameCheck(string player1, string player2)
 {
@@ -106,8 +114,8 @@ int main()
             system("cls");
             //unos imena igraca
             string player1, player2;
-            //char token1, token2;
-            //char* likovi = new char[4]{ '+','-','x' };
+            char token1, token2;
+            char tokens[4] = { 'X', 'O', 'I','H' };
             //upis imena i provjera je li string prazan
             cout << "ODABIR IMENA IGRACA" << endl << endl;
             do {
@@ -130,10 +138,16 @@ int main()
 
             } while (nameCheck(player1, player2));
             cout << "ODABIR ZETONA" << endl << endl;
-            cout << "Dio koda: " << endl
-                << "." << endl
-                << "." << endl
-                << "." << endl;
+            cout << "Racunalo ce nasumicno izabrati zetone za svakog igraca" << endl;
+            srand(time(0));
+            int index = 0;
+            token1 = tokens[printRandomToken(index)];
+            cout << "Zeton 1. igraca ce biti: " << "\033[32m" << token1 << "\033[0m" << endl;
+            do
+            {
+                token2 = tokens[printRandomToken(index)];
+            } while (token1 == token2);
+            cout << "Zeton 2. igraca ce biti: " << "\033[32m" << token2 << "\033[0m" << endl;
             //_getch();
             //system("cls");
             cout << "\t ___   ___                 ___  ___ _____" << endl;
@@ -201,13 +215,10 @@ void player2(char grid[][7],int x,int y)
        
 }*/
 /* 
-- poseban bin file ili odabir korisnika za pravila igre
--suèelje sa odabirom poèetka igre,pravila,imena igraèa riješeno
+
+
 -21 žeton za pojedinog igraèa
--max 2 igraèa
--znakovi na ploèi
 -2d polje
--igraèa ploèa
 -funkcija za provjeru 4 iste boje paralelno,okomito i dijagonalno
 -spremanje rezultata u bin file (dodatna moguænost:sortiranje rezultata prema broju pobjeda ili kronološki)
 
