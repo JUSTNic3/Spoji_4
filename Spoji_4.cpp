@@ -2,19 +2,14 @@
 #include <fstream>
 #include <string>
 #include <algorithm>
-#include <cctype>
 #include <windows.h>
 #include <conio.h>
-#include <ctime>
 using namespace std;
 
-int printRandomToken(int index)
-{
-    for (int i = 0; i < 4; i++)
-        index = rand() % 4;
-    return index;
-}
-
+struct PI {
+    string PN;
+    char PID;
+};
 bool nameCheck(string player1, string player2)
 {
     /*remove koristimo za micanje razmaka(problem je mnozenje zadnjih slova nakon micanja razmaka
@@ -36,13 +31,18 @@ bool nameCheck(string player1, string player2)
 
 void show_grid(char ploca[6][8])
 {
-   
+    cout << "\t        ";
+    for (int i = 0; i < 8; i++)
+    {
+        cout << i << "   ";
+    }
+    cout << endl;
     for (int i = 0; i < 6; i++)
     {
         cout << "\t       ";
         for (int j = 0; j < 8; j++)
         {
-            cout << "[  ]" << ploca[i][j];
+            cout << "[ ]" << ploca[i][j];
         }
         cout << endl;
     }
@@ -72,10 +72,10 @@ int main()
         cout << "3. ispis rezultata" << endl;
         cout << "4. izlaz iz programa" << endl << endl;
         cout << "Vas odabir: ";
-        int izbor;
+        char izbor;
         cin >> izbor;
         cin.ignore();
-        if (izbor == 1){
+        if (izbor == '1'){
             datoteka.open("Pravila.bin", ios::binary | ios::in);
             datoteka.read((char*)&p1, sizeof(p1));
             cout << p1 << endl;
@@ -89,12 +89,11 @@ int main()
             cout << p5 << endl;
             datoteka.close(); 
         }
-        else if (izbor == 2){
+        else if (izbor == '2'){
             system("cls");
             //unos imena igraca
             string player1, player2;
-            char token1, token2;
-            char tokens[4] = { 'X', 'O', 'I','H' };
+            char token1{ 'X' }, token2{'O'};
             //upis imena i provjera je li string prazan
             cout << "ODABIR IMENA IGRACA" << endl << endl;
             do {
@@ -116,16 +115,8 @@ int main()
                 } while (player2.empty());
 
             } while (nameCheck(player1, player2));
-            cout << "ODABIR ZETONA" << endl << endl;
-            cout << "Racunalo ce nasumicno izabrati zetone za svakog igraca" << endl;
-            srand(time(0));
-            int index = 0;
-            token1 = tokens[printRandomToken(index)];
+            cout << "VASI ZETONI:" << endl << endl;
             cout << "Zeton 1. igraca ce biti: " << "\033[32m" << token1 << "\033[0m" << endl;
-            do
-            {
-                token2 = tokens[printRandomToken(index)];
-            } while (token1 == token2);
             cout << "Zeton 2. igraca ce biti: " << "\033[32m" << token2 << "\033[0m" << endl;
             //_getch();
             system("cls");
@@ -143,12 +134,14 @@ int main()
                     grid[i][j] = ' ';
             }
             show_grid(grid);
+
+
         }
-        else if (izbor == 3) {
+        else if (izbor == '3') {
             fstream rezults("rezultati.bin", ios::binary | ios::in);
 
         }
-        else if(izbor == 4){
+        else if(izbor == '4'){
             cout << "Dovidjenja!";
             break;
         }
@@ -160,9 +153,9 @@ int main()
     }  
 }
 
-//https://www.tutorialspoint.com/cplusplus-program-to-check-if-input-is-an-integer-or-a-string
+
 //https://www.thiscodeworks.com/game-connect-four-connect-four-is-a-two-player-board-game-in-which-the-players-alternately-drop-colored-disks-into-a/5ffdf8a20c8c140014566a1c
- 
+//https://gist.github.com/MichaelEstes/7836988
 /*void player1(char grid[][7], int x, int y)
 {
     show_grid(grid);
