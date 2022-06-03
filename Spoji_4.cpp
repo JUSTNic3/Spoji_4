@@ -8,24 +8,19 @@ using namespace std;
 
 struct PlayerInfo {
     string PlayerName;
-    char PlayerID;
+    char PlayerID{' '};
 };
-void show_grid(char ploca[6][8])
+
+void ShowGrid(char grid[][8])
 {
-    cout << "\t        ";
-    for (int i = 0; i < 8; i++)
-    {
-        cout << i << "   ";
-    }
-    cout << endl;
+
     for (int i = 0; i < 6; i++)
     {
-        cout << "\t       ";
         for (int j = 0; j < 8; j++)
         {
-            cout << "[ ]" << ploca[i][j];
+            cout << "|" << grid[i][j];
         }
-        cout << endl;
+        cout << "|" << endl;
     }
 }
 
@@ -94,14 +89,9 @@ int main()
             cout << "       _____________________________________________________" << endl;
             cout << endl;
             char grid[6][8];
-            for (int i = 0; i < 6; i++)
-            {
-                for (int j = 0; j < 8; j++)
-                    grid[i][j] = ' ';
-            }
-            show_grid(grid);
-
-
+            ShowGrid(grid);
+            
+            
         }
         else if (izbor == '3') {
             fstream rezults("rezultati.bin", ios::binary | ios::in);
