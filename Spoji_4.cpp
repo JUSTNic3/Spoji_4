@@ -37,6 +37,27 @@ void show_grid(char grid[6][8])
     }
 }
 
+int PlayerDrop(char grid[6][8], PlayerInfo activePlayer)
+{
+    int dropChoice;
+    do
+    {
+        cout << activePlayer.PlayerName << "'s Turn ";
+        cout << "Please enter a number between 1 and 8: ";
+        cin >> dropChoice;
+
+        while (grid[1][dropChoice] == 'X' || grid[1][dropChoice] == 'O')
+        {
+            cout << "That row is full, please enter a new row: ";
+            cin >> dropChoice;
+        }
+        //grid[dropChoice-1][0] = activePlayer.PlayerID;
+
+    } while (dropChoice < 1 || dropChoice > 8);
+
+    return dropChoice;
+}
+
 int main()
 {
     string p1, p2, p3, p4, p5;
@@ -102,7 +123,13 @@ int main()
                     grid[i][j] = ' ';
             }
             show_grid(grid);
-
+            int flag = 0;
+            do
+            {
+                PlayerDrop(grid,player1);
+                show_grid(grid);
+                flag++;
+            } while (flag<2);
 
         }
         else if (izbor == '3') {
