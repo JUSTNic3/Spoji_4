@@ -1,4 +1,4 @@
-#include <iostream>
+Ôªø#include <iostream>
 #include <fstream>
 #include <string>
 #include <algorithm>
@@ -8,19 +8,25 @@ using namespace std;
 
 struct PlayerInfo {
     string PlayerName;
-    char PlayerID{' '};
+    char PlayerID;
 };
 
-void ShowGrid(char grid[][8])
+void show_grid(char ploca[6][8])
 {
-
+    cout << "\t        ";
+    for (int i = 0; i < 8; i++)
+    {
+        cout << i+1 << "   ";
+    }
+    cout << endl;
     for (int i = 0; i < 6; i++)
     {
+        cout << "\t       ";
         for (int j = 0; j < 8; j++)
         {
-            cout << "|" << grid[i][j];
+            cout << "[" << ploca[i][j] << "] ";
         }
-        cout << "|" << endl;
+        cout << endl;
     }
 }
 
@@ -51,7 +57,7 @@ int main()
         char izbor;
         cin >> izbor;
         cin.ignore();
-        if (izbor == '1'){
+        if (izbor == '1') {
             datoteka.open("Pravila.bin", ios::binary | ios::in);
             datoteka.read((char*)&p1, sizeof(p1));
             cout << p1 << endl;
@@ -63,9 +69,9 @@ int main()
             cout << p4 << endl;
             datoteka.read((char*)&p5, sizeof(p5));
             cout << p5 << endl;
-            datoteka.close(); 
+            datoteka.close();
         }
-        else if (izbor == '2'){
+        else if (izbor == '2') {
             system("cls");
             //unos imena igraca
             PlayerInfo player1, player2;
@@ -89,24 +95,29 @@ int main()
             cout << "       _____________________________________________________" << endl;
             cout << endl;
             char grid[6][8];
-            ShowGrid(grid);
-            
-            
+            for (int i = 0; i < 6; i++)
+            {
+                for (int j = 0; j < 8; j++)
+                    grid[i][j] = ' ';
+            }
+            show_grid(grid);
+
+
         }
         else if (izbor == '3') {
             fstream rezults("rezultati.bin", ios::binary | ios::in);
 
         }
-        else if(izbor == '4'){
+        else if (izbor == '4') {
             cout << "Dovidjenja!";
             break;
         }
         else {
-                cout << "Krivi unos!" << endl;
+            cout << "Krivi unos!" << endl;
         }
-        
-       system("pause");
-    }  
+
+        system("pause");
+    }
 }
 
 
@@ -115,8 +126,8 @@ int main()
 /*void player1(char grid[][7], int x, int y)
 {
     show_grid(grid);
-    
-    cout << "Drop a red disk at column (0ñ6): ";
+
+    cout << "Drop a red disk at column (0‚Äì6): ";
     cin >> y;
     if (grid[x][y] == ' ')
         grid[x][y] = 'R';
@@ -126,12 +137,12 @@ int main()
         grid[x][y] = 'R';
     }
 }
- 
+
 void player2(char grid[][7],int x,int y)
 {
     show_grid(grid);
- 
-    cout << "Drop a yellow disk at column (0ñ6): ";
+
+    cout << "Drop a yellow disk at column (0‚Äì6): ";
     cin >> y;
     if (grid[x][y] == ' ')
         grid[x][y] = 'Y';
@@ -140,16 +151,12 @@ void player2(char grid[][7],int x,int y)
         while (grid[x][y] != ' ')x--;
         grid[x][y] = 'Y';
     }
-       
+
 }*/
-/* 
-
-
--21 ûeton za pojedinog igraËa
+/*
+-21 ≈æeton za pojedinog igra√®a
 -2d polje
 -funkcija za provjeru 4 iste boje paralelno,okomito i dijagonalno
--spremanje rezultata u bin file (dodatna moguÊnost:sortiranje rezultata prema broju pobjeda ili kronoloöki)
-
-*ultra izazov(dodatan +):moguÊnost prestanka igre u bilo kojem trenutku te spremanje svega u bin file za kasniji nastavak
-
+-spremanje rezultata u bin file (dodatna mogu√¶nost:sortiranje rezultata prema broju pobjeda ili kronolo≈°ki)
+*ultra izazov(dodatan +):mogu√¶nost prestanka igre u bilo kojem trenutku te spremanje svega u bin file za kasniji nastavak
 */
