@@ -37,27 +37,45 @@ void show_grid(char grid[6][8])
     }
 }
 
-int PlayerDrop(char grid[6][8], PlayerInfo activePlayer)
+int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
 {
-    int dropChoice;
+    int DropChoice;
     do
     {
-        cout << activePlayer.PlayerName << "'s Turn ";
-        cout << "Please enter a number between 1 and 8: ";
-        cin >> dropChoice;
+        cout << endl << ActivePlayer.PlayerName << ", tvoj red. ";
+        cout << "Molim unesite broj stupac izmedu 1 i 8: ";
+        cin >> DropChoice;
 
-        while (grid[1][dropChoice] == 'X' || grid[1][dropChoice] == 'O')
+        while (grid[1][DropChoice-1] != ' ')
         {
-            cout << "That row is full, please enter a new row: ";
-            cin >> dropChoice;
+            cout << "Taj redak je pun , molim unesite novi redak: ";
+            cin >> DropChoice;
         }
-        //grid[dropChoice-1][0] = activePlayer.PlayerID;
 
-    } while (dropChoice < 1 || dropChoice > 8);
-
-    return dropChoice;
+    } while (DropChoice < 0 || DropChoice > 8);
+    return DropChoice;
 }
+void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
+{
+    int lgt = 6, t = 0;
+    do {
+        if (grid[lgt][DropChoice-1] == ' ')
+        {
+            grid[lgt][DropChoice-1] = ActivePlayer.PlayerID;
+            t = 1;
+        }
+        else
+            --lgt;
 
+    } while (t != 1);
+}
+int Check4(char grid[6][8], PlayerInfo ActivePlayer, int win)
+{
+    char znak;
+    int win
+    znak = ActivePlayer.PlayerID;
+    win = 0;
+}
 int main()
 {
     string p1, p2, p3, p4, p5;
@@ -100,8 +118,8 @@ int main()
             datoteka.close();
         }
         else if (izbor == '2') {
-            system("cls");
             PlayerInfo player1, player2;
+            system("cls");
 
             cout << "ODABIR IMENA IGRACA" << endl << endl;
             cout << "Unesite ime 1. igraca: ";
@@ -123,13 +141,35 @@ int main()
                     grid[i][j] = ' ';
             }
             show_grid(grid);
-            int flag = 0;
+            
+            int flag = 0, DropChoice, full = 0,again=0,win=0;
+
             do
             {
-                PlayerDrop(grid,player1);
+                DropChoice = PlayerDrop(grid, player1);
+                CheckBellow(grid, player1, DropChoice);
+                _getch();
                 show_grid(grid);
+                win = Check4(grid, player1);
+                if(win == 1)
+                {
+
+                }
+                system("cls");
+                
+
+                DropChoice = PlayerDrop(grid, player2);
+                CheckBellow(grid, player2, DropChoice);
+                _getch();
+                system("cls");
+                show_grid(grid);
+                win = Check4(grid, player2);
+                if(win == 1)
+                {
+
+                }
                 flag++;
-            } while (flag<2);
+            } while (flag < 2);
 
         }
         else if (izbor == '3') {
@@ -185,6 +225,4 @@ void player2(char grid[][7],int x,int y)
 -21 žeton za pojedinog igraèa
 -2d polje
 -funkcija za provjeru 4 iste boje paralelno,okomito i dijagonalno
--spremanje rezultata u bin file (dodatna moguænost:sortiranje rezultata prema broju pobjeda ili kronološki)
-*ultra izazov(dodatan +):moguænost prestanka igre u bilo kojem trenutku te spremanje svega u bin file za kasniji nastavak
-*/
+-spremanje rezultata u bin file (dodatna moguænost:sortiranje rezultata prema broju pobjeda ili kronološki)*/
