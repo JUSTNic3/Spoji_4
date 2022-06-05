@@ -45,37 +45,87 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
         cout << endl << ActivePlayer.PlayerName << ", tvoj red. ";
         cout << "Molim unesite broj stupac izmedu 1 i 8: ";
         cin >> DropChoice;
-
-        while (grid[1][DropChoice-1] != ' ')
+        if (DropChoice > 0 && DropChoice < 9)
         {
-            cout << "Taj redak je pun , molim unesite novi redak: ";
-            cin >> DropChoice;
+            while (grid[1][DropChoice - 1] != ' ')
+            {
+                cout << "Taj redak je pun , molim unesite novi redak: ";
+                cin >> DropChoice;
+            }
         }
-
-    } while (DropChoice < 0 || DropChoice > 8);
+        else
+            cout << "Krivi stupac! Pokusajte ponovno." << endl;
+    } while (DropChoice < 1 || DropChoice > 8);
     return DropChoice;
 }
 void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
 {
-    int lgt = 6, t = 0;
+    int lgt = 5, t = 0;
     do {
-        if (grid[lgt][DropChoice-1] == ' ')
+        if (grid[lgt][DropChoice-1] != 'X' && grid[lgt][DropChoice-1] != 'O')
         {
             grid[lgt][DropChoice-1] = ActivePlayer.PlayerID;
             t = 1;
         }
         else
+        
             --lgt;
-
     } while (t != 1);
 }
+
 int Check4(char grid[6][8], PlayerInfo ActivePlayer, int win)
 {
-    char znak;
-    int win
-    znak = ActivePlayer.PlayerID;
+    char znak = ActivePlayer.PlayerID;
     win = 0;
+    for (int i = 0; i < 6; i++)
+    {
+        for (int j = 0; j < 8; j++)
+        {
+            if (grid[i][j] == znak && grid[i + 1][j + 1] == znak && grid[i + 2][j + 2] == znak && grid[i + 3][j + 3] == znak)
+                win = 1;
+            /*if (grid[i][j] == znak && grid[i][j + 1] == znak && grid[i][j + 2] == znak && grid[i][j + 3] == znak)
+                win = 1;
+            if (grid[i][j] == znak && grid[i + 1][j] == znak && grid[i + 2][j] == znak && grid[i + 3][j] == znak)
+                win = 1;
+            if (grid[i][j] == znak && grid[i + 1][j - 1] == znak && grid[i + 2][j - 2] == znak && grid[i + 3][j - 3] == znak)
+                win = 1;
+            if (grid[i][j] == znak && grid[i][j - 1] == znak && grid[i][j - 2] == znak && grid[i][j - 3] == znak)
+                win = 1;*/
+        }
+    }
+    return win;
 }
+
+void PlayerWin(PlayerInfo ActivePlayer)
+{
+    cout << endl << ActivePlayer.PlayerName << ", pobijedio si!" << endl;
+}
+
+int restart(char grid[6][8])
+{
+    int restart;
+    do{
+        cin >> restart;
+        if (restart == 1)
+        {
+            for (int i = 0; i < 6; i++)
+            {
+                cout << "\t          ";
+                for (int j = 0; j < 8; j++)
+                {
+                    cout << "[" << ' ' << "] ";
+                }
+                cout << endl;
+            }
+        }
+        else if (restart != 1 && restart != 2)
+            cout << "Krivi unos! Molimo upisite valjani broj." << endl;
+        else
+            cout << "Dovidjenja!" << endl;
+    } while (restart != 1 && restart != 2);
+    return restart;
+}
+
 int main()
 {
     string p1, p2, p3, p4, p5;
@@ -142,7 +192,7 @@ int main()
             }
             show_grid(grid);
             
-            int flag = 0, DropChoice, full = 0,again=0,win=0;
+            int DropChoice, full = 0,again=0,win=0;
 
             do
             {
@@ -150,10 +200,13 @@ int main()
                 CheckBellow(grid, player1, DropChoice);
                 _getch();
                 show_grid(grid);
-                win = Check4(grid, player1);
+                win = Check4(grid, player1, win);
                 if(win == 1)
                 {
-
+                    PlayerWin(player1);
+                    again = restart(grid);
+                    if (again == 2)
+                        break;
                 }
                 system("cls");
                 
@@ -163,13 +216,15 @@ int main()
                 _getch();
                 system("cls");
                 show_grid(grid);
-                win = Check4(grid, player2);
+                win = Check4(grid, player2, win);
                 if(win == 1)
                 {
-
+                    PlayerWin(player2);
+                    again = restart(grid);
+                    if (again == 2)
+                        break;
                 }
-                flag++;
-            } while (flag < 2);
+            } while (again != 2);
 
         }
         else if (izbor == '3') {
