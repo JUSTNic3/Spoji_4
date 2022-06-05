@@ -11,7 +11,7 @@ struct PlayerInfo {
     char PlayerID;
 };
 
-void show_grid(char grid[6][8])
+void ShowGrid(char grid[6][8])
 {
     cout << "\t ___   ___                 ___  ___ _____" << endl;
     cout << "\t|     |   | |'   | |'   | |    |      |          /|" << endl;
@@ -47,7 +47,7 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
         cin >> DropChoice;
         if (DropChoice > 0 && DropChoice < 9)
         {
-            while (grid[1][DropChoice - 1] != ' ')
+            while (grid[0][DropChoice - 1] != ' ') 
             {
                 cout << "Taj redak je pun , molim unesite novi redak: ";
                 cin >> DropChoice;
@@ -179,10 +179,10 @@ int main()
 
             player1.PlayerID = 'X';
             player2.PlayerID = 'O';
-            cout << "Zeton 1. igraca ce biti: " << "\033[32m" << player1.PlayerID << "\033[0m" << endl;
-            cout << "Zeton 2. igraca ce biti: " << "\033[32m" << player2.PlayerID << "\033[0m" << endl;
+            cout << endl << "Zeton 1. igraca ce biti: " << "\033[32m" << player1.PlayerID << "\033[0m" << endl;
+            cout << "Zeton 2. igraca ce biti: " << "\033[32m" << player2.PlayerID << "\033[0m" << endl << endl;
 
-            _getch();
+            system("pause");
             system("cls");
             char grid[6][8];
             for (int i = 0; i < 6; i++)
@@ -190,7 +190,7 @@ int main()
                 for (int j = 0; j < 8; j++)
                     grid[i][j] = ' ';
             }
-            show_grid(grid);
+            ShowGrid(grid);
             
             int DropChoice, full = 0,again=0,win=0;
 
@@ -198,8 +198,6 @@ int main()
             {
                 DropChoice = PlayerDrop(grid, player1);
                 CheckBellow(grid, player1, DropChoice);
-                _getch();
-                show_grid(grid);
                 win = Check4(grid, player1, win);
                 if(win == 1)
                 {
@@ -209,13 +207,12 @@ int main()
                         break;
                 }
                 system("cls");
-                
 
+                ShowGrid(grid);
                 DropChoice = PlayerDrop(grid, player2);
                 CheckBellow(grid, player2, DropChoice);
-                _getch();
                 system("cls");
-                show_grid(grid);
+                ShowGrid(grid);
                 win = Check4(grid, player2, win);
                 if(win == 1)
                 {
