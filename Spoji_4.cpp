@@ -3,7 +3,6 @@
 #include <string>
 #include <algorithm>
 #include <windows.h>
-#include <conio.h>
 using namespace std;
 
 struct PlayerInfo {
@@ -13,12 +12,12 @@ struct PlayerInfo {
 
 void ShowGrid(char grid[6][8])
 {
-    cout << "\t ___   ___                 ___  ___ _____" << endl;
-    cout << "\t|     |   | |'   | |'   | |    |      |          /|" << endl;
-    cout << "\t|     |   | | '  | | '  | |__  |      |         / |" << endl;
-    cout << "\t|     |   | |  ' | |  ' | |    |      |        /__|_" << endl;
-    cout << "\t|___  |___| |   '| |   '| |___ |___   |           |" << endl;
-    cout << "       _____________________________________________________" << endl;
+    cout << "\t\t ___   ___   ___     " << endl;
+    cout << "\t\t|     |   | |   |     |  |         /|" << endl;
+    cout << "\t\t|___  |___| |   |     |  |        / |" << endl;
+    cout << "\t\t    | |     |   |     |  |       /__|_" << endl;
+    cout << "\t\t ___| |     |___|  |__|  |          |" << endl;
+    cout << "        ____________________________________________________" << endl;
     cout << endl;
     cout << "\t           ";
     for (int i = 0; i < 8; i++)
@@ -42,7 +41,7 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
     int DropChoice;
     do
     {
-        cout << endl << ActivePlayer.PlayerName << ", tvoj red. ";
+        cout << endl << ActivePlayer.PlayerName << "(" << "\033[32m" << ActivePlayer.PlayerID << "\033[0m" << ")" << ", tvoj red. ";
         cout << "Molim unesite broj stupac izmedu 1 i 8: ";
         cin >> DropChoice;
         if (DropChoice > 0 && DropChoice < 9)
@@ -54,15 +53,16 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
             }
         }
         else
-            cout << "Krivi stupac! Pokusajte ponovno." << endl;
+            cout << "\033[31m" <<  "Krivi stupac! Pokusajte ponovno." <<  "\033[0m" << endl;
     } while (DropChoice < 1 || DropChoice > 8);
-    return DropChoice;
+    return DropChoice; 
 }
+
 void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
 {
     int lgt = 5, t = 0;
     do {
-        if (grid[lgt][DropChoice-1] != 'X' && grid[lgt][DropChoice-1] != 'O')
+        if (grid[lgt][DropChoice-1] == ' ')
         {
             grid[lgt][DropChoice-1] = ActivePlayer.PlayerID;
             t = 1;
@@ -71,6 +71,17 @@ void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
         
             --lgt;
     } while (t != 1);
+}
+
+int FullGrid(char grid[6][8])
+{
+    int full = 0;
+    for (int i = 0; i < 8; ++i)
+    {
+        if (grid[1][i] != ' ')
+            ++full;
+    }
+    return full;
 }
 
 int Check4(char grid[6][8], PlayerInfo ActivePlayer, int win)
@@ -83,14 +94,14 @@ int Check4(char grid[6][8], PlayerInfo ActivePlayer, int win)
         {
             if (grid[i][j] == znak && grid[i + 1][j + 1] == znak && grid[i + 2][j + 2] == znak && grid[i + 3][j + 3] == znak)
                 win = 1;
-            /*if (grid[i][j] == znak && grid[i][j + 1] == znak && grid[i][j + 2] == znak && grid[i][j + 3] == znak)
+            if (grid[i][j] == znak && grid[i][j + 1] == znak && grid[i][j + 2] == znak && grid[i][j + 3] == znak)
                 win = 1;
             if (grid[i][j] == znak && grid[i + 1][j] == znak && grid[i + 2][j] == znak && grid[i + 3][j] == znak)
                 win = 1;
             if (grid[i][j] == znak && grid[i + 1][j - 1] == znak && grid[i + 2][j - 2] == znak && grid[i + 3][j - 3] == znak)
                 win = 1;
             if (grid[i][j] == znak && grid[i][j - 1] == znak && grid[i][j - 2] == znak && grid[i][j - 3] == znak)
-                win = 1;*/
+                win = 1;
         }
     }
     return win;
@@ -98,30 +109,46 @@ int Check4(char grid[6][8], PlayerInfo ActivePlayer, int win)
 
 void PlayerWin(PlayerInfo ActivePlayer)
 {
-    cout << endl << ActivePlayer.PlayerName << ", pobijedio si!" << endl;
+    cout << endl << "\033[32m" << ActivePlayer.PlayerName << ", pobijedio si!"  << "\033[0m" << endl;
 }
 
 int restart(char grid[6][8])
 {
     int restart;
     do{
+        cout << "Zelite li zaigrati ponovno? Da(1) Ne(2)" << endl;
         cin >> restart;
         if (restart == 1)
         {
+            system("cls");
+            cout << "\t ___   ___   ___     " << endl;
+            cout << "\t|     |   | |   |     |  |         /|" << endl;
+            cout << "\t|___  |___| |   |     |  |        / |" << endl;
+            cout << "\t    | |     |   |     |  |       /__|_" << endl;
+            cout << "\t ___| |     |___|  |__|  |          |" << endl;
+            cout << "        ____________________________________________________" << endl;
+            cout << endl;
+            cout << "\t           ";
+            for (int i = 0; i < 8; i++)
+            {
+                cout << i + 1 << "   ";
+            }
+            cout << endl;
             for (int i = 0; i < 6; i++)
             {
                 cout << "\t          ";
                 for (int j = 0; j < 8; j++)
                 {
                     cout << "[" << ' ' << "] ";
+                    grid[i][j] = ' ';
                 }
                 cout << endl;
             }
         }
         else if (restart != 1 && restart != 2)
-            cout << "Krivi unos! Molimo upisite valjani broj." << endl;
+            cout << "\033[31m" << "Krivi unos! Molimo upisite valjani broj." << "\033[0m" << endl;
         else
-            cout << "Dovidjenja!" << endl;
+            cout << "\033[32m" << << endl << "Igra je gotova!" << "\033[0m" << endl;
     } while (restart != 1 && restart != 2);
     return restart;
 }
@@ -199,6 +226,8 @@ int main()
                 DropChoice = PlayerDrop(grid, player1);
                 CheckBellow(grid, player1, DropChoice);
                 win = Check4(grid, player1, win);
+                system("cls");
+                ShowGrid(grid);
                 if(win == 1)
                 {
                     PlayerWin(player1);
@@ -220,6 +249,12 @@ int main()
                     again = restart(grid);
                     if (again == 2)
                         break;
+                }
+                full=FullGrid(grid);
+                if(full == 8)
+                {
+                    cout << endl << "\033[32m" << "Ploca je puna, rezultat je izjednacen!" << "\033[0m" << endl;
+                    again = restart(grid);
                 }
             } while (again != 2);
 
