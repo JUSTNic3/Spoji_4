@@ -7,7 +7,7 @@ using namespace std;
 
 struct PlayerInfo {
     string PlayerName;
-    char PlayerID;
+    char PlayerID{' '};
 };
 
 void ShowGrid(char grid[6][8])
@@ -148,7 +148,7 @@ int restart(char grid[6][8])
         else if (restart != 1 && restart != 2)
             cout << "\033[31m" << "Krivi unos! Molimo upisite valjani broj." << "\033[0m" << endl;
         else
-            cout << "\033[32m" << << endl << "Igra je gotova!" << "\033[0m" << endl;
+            cout << "\033[32m" << endl << "Igra je gotova!" << "\033[0m" << endl;
     } while (restart != 1 && restart != 2);
     return restart;
 }
@@ -177,10 +177,10 @@ int main()
         cout << "3. ispis rezultata" << endl;
         cout << "4. izlaz iz programa" << endl << endl;
         cout << "Vas odabir: ";
-        char izbor;
+        string izbor;
         cin >> izbor;
         cin.ignore();
-        if (izbor == '1') {
+        if (izbor == "1") {
             datoteka.open("Pravila.bin", ios::binary | ios::in);
             datoteka.read((char*)&p1, sizeof(p1));
             cout << p1 << endl;
@@ -194,7 +194,7 @@ int main()
             cout << p5 << endl;
             datoteka.close();
         }
-        else if (izbor == '2') {
+        else if (izbor == "2") {
             PlayerInfo player1, player2;
             system("cls");
 
@@ -250,6 +250,7 @@ int main()
                     if (again == 2)
                         break;
                 }
+
                 full=FullGrid(grid);
                 if(full == 8)
                 {
@@ -259,11 +260,11 @@ int main()
             } while (again != 2);
 
         }
-        else if (izbor == '3') {
+        else if (izbor == "3") {
             fstream rezults("rezultati.bin", ios::binary | ios::in);
 
         }
-        else if (izbor == '4') {
+        else if (izbor == "4") {
             cout << "Dovidjenja!";
             break;
         }
