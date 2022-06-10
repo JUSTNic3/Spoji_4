@@ -308,6 +308,6 @@ int main()
     }
 }
 
-
+//još samo save & load :(
 //https://www.thiscodeworks.com/game-connect-four-connect-four-is-a-two-player-board-game-in-which-the-players-alternately-drop-colored-disks-into-a/5ffdf8a20c8c140014566a1c
 //https://gist.github.com/MichaelEstes/7836988
