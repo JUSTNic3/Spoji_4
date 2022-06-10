@@ -6,8 +6,8 @@
 using namespace std;
 
 struct PlayerInfo {
-    string PlayerName;
-    char PlayerID{' '};
+    string Name;
+    char ID{' '};
 };
 
 void Headline()
@@ -46,7 +46,7 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
     int DropChoice = 0;
     do
     {
-        cout << endl << ActivePlayer.PlayerName << "(" << "\033[32m" << ActivePlayer.PlayerID << "\033[0m" << ")" << ", tvoj red. ";
+        cout << endl << ActivePlayer.Name << "(" << "\033[32m" << ActivePlayer.ID << "\033[0m" << ")" << ", tvoj red. ";
         cout << "Molim unesite broj stupac izmedu 1 i 8: ";
         cin >> DropChoice;
         if (DropChoice > 0 && DropChoice < 9)
@@ -69,7 +69,7 @@ void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
     do {
         if (grid[lgt][DropChoice - 1] == ' ')
         {
-            grid[lgt][DropChoice - 1] = ActivePlayer.PlayerID;
+            grid[lgt][DropChoice - 1] = ActivePlayer.ID;
             t = 1;
         }
         else
@@ -80,7 +80,7 @@ void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
 
 int Check4(char grid[5][8], PlayerInfo ActivePlayer, int win)
 {
-    char znak = ActivePlayer.PlayerID;
+    char znak = ActivePlayer.ID;
     win = 0;
     for (int i = 0; i < 5; i++)
     {
@@ -150,23 +150,23 @@ int FullGrid(char grid[6][8])
 
 void PlayerWin(PlayerInfo ActivePlayer)
 {
-    cout << endl << "\033[32m" << ActivePlayer.PlayerName << ", pobijedio si!" << "\033[0m" << endl;
+    cout << endl << "\033[32m" << ActivePlayer.Name << ", pobijedio si!" << "\033[0m" << endl;
 }
 
 bool nameCheck(PlayerInfo player1, PlayerInfo player2)
 {
 
-    player1.PlayerName.erase(remove(player1.PlayerName.begin(), player1.PlayerName.end(), ' '), player1.PlayerName.end());
-    player2.PlayerName.erase(remove(player2.PlayerName.begin(), player2.PlayerName.end(), ' '), player2.PlayerName.end());
+    player1.Name.erase(remove(player1.Name.begin(), player1.Name.end(), ' '), player1.Name.end());
+    player2.Name.erase(remove(player2.Name.begin(), player2.Name.end(), ' '), player2.Name.end());
 
-    for_each(player1.PlayerName.begin(), player1.PlayerName.end(), [](char& c) {c = tolower(c); });
-    for_each(player2.PlayerName.begin(), player2.PlayerName.end(), [](char& c) {c = tolower(c); });
-    if (player1.PlayerName == player2.PlayerName) {
+    for_each(player1.Name.begin(), player1.Name.end(), [](char& c) {c = tolower(c); });
+    for_each(player2.Name.begin(), player2.Name.end(), [](char& c) {c = tolower(c); });
+    if (player1.Name == player2.Name) {
         cout << "\033[31m" << "Ime je vec upotrebljeno! Pokusajte ponovmo!" << "\033[0m" << endl;
         return true;
     }
     else {
-        cout << "\033[32m" << endl << "Ime 2. igraca (" << player2.PlayerName << ") uspjesno dodano. :)" << "\033[0m" << endl << endl;
+        cout << "\033[32m" << endl << "Ime 2. igraca (" << player2.Name << ") uspjesno dodano. :)" << "\033[0m" << endl << endl;
         return false;
     }
 }
@@ -198,6 +198,7 @@ int main()
         cin >> izbor;
         cin.ignore();
         if (izbor == "1") {
+
             system("cls");
             datoteka.open("Pravila.bin", ios::binary | ios::in);
             if (datoteka.is_open())
@@ -214,42 +215,51 @@ int main()
                 cout << "Greska pri otvaranju datoteke!" << endl;
         }
         else if (izbor == "2") {
-            system("cls");
+
+            fstream saveGrid("grid.bin", ios::binary | ios::out);
+            fstream savePlayers("players.bin", ios::binary | ios::out);
             PlayerInfo player1, player2;
+            system("cls");
 
             cout << "ODABIR IMENA IGRACA" << endl << endl;
 	        do {
 		        cout << "Unesite ime 1. igraca: ";
-		        getline(cin, player1.PlayerName);
-		        if(player1.PlayerName.empty())
+		        getline(cin, player1.Name);
+		        if(player1.Name.empty())
 			        cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
-	        } while (player1.PlayerName.empty());
-	        cout << "\033[32m" << endl << "Ime 1. igraca (" << player1.PlayerName << ") uspjesno dodano. :)" << "\033[0m" << endl << endl;
+	        } while (player1.Name.empty());
+            //spremanje 1. igraca
+            savePlayers.write((char*) &player1.Name,sizeof(player1.Name));
+	        cout << "\033[32m" << endl << "Ime 1. igraca (" << player1.Name << ") uspjesno dodano. :)" << "\033[0m" << endl << endl;
 	        do
 	        {
 		        do {
 			        cout << "Unesite ime 2. igraca: ";
-			        getline(cin, player2.PlayerName);
-			        if(player2.PlayerName.empty())
+			        getline(cin, player2.Name);
+			        if(player2.Name.empty())
 				        cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
-		        } while (player2.PlayerName.empty());
+		        } while (player2.Name.empty());
 	
 	        } while (nameCheck(player1, player2));
+            //spremanje 2. igraca
+            savePlayers.write((char*)&player2.Name, sizeof(player2.Name));
 
-            player1.PlayerID = 'X';
-            player2.PlayerID = 'O';
-            cout << endl << "Zeton 1. igraca ce biti: " << "\033[32m" << player1.PlayerID << "\033[0m" << endl;
-            cout << "Zeton 2. igraca ce biti: " << "\033[32m" << player2.PlayerID << "\033[0m" << endl << endl;
+            player1.ID = 'X';
+            player2.ID = 'O';
+            cout << endl << "Zeton 1. igraca ce biti: " << "\033[32m" << player1.ID << "\033[0m" << endl;
+            cout << "Zeton 2. igraca ce biti: " << "\033[32m" << player2.ID << "\033[0m" << endl << endl;
 
             system("pause");
             system("cls");
             char grid[6][8];
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 5; i++)
             {
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < 7; j++)
                     grid[i][j] = ' ';
             }
             ShowGrid(grid);
+            //spremanje polja,za svaki slučaj
+            saveGrid.write();
             
             int DropChoice, full = 0,again=0,win=0;
             //početak igre
@@ -293,10 +303,12 @@ int main()
 
         }
         else if (izbor == "3") {
-            fstream results("rezultati.bin", ios::binary | ios::in);
+
+            fstream results("grid.bin", ios::binary | ios::out);
 
         }
         else if (izbor == "4") {
+
             cout << "Dovidjenja!";
             break;
         }
