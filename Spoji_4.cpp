@@ -173,18 +173,15 @@ bool nameCheck(PlayerInfo player1, PlayerInfo player2)
 
 int main()
 {
-    string p1, p2, p3, p4, p5;
-    p1 = "\t\t Pravila";
-    p2 = "-Svaki igrac ima po 21 zeton (ukupno 42).";
-    p3 = "-Trebate skupiti 4 zetona iste boje u nizu: okomito, vodoravno ili dijagonalno.";
-    p4 = "-Mozete baciti samo jedan zeton po okretu.";
-    p5 = "-Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.";
+    string text[5];
+    text[0] = "\t\t Pravila";
+    text[1] = "-Svaki igrac ima po 21 zeton (ukupno 42).";
+    text[2] = "-Trebate skupiti 4 zetona iste boje u nizu: okomito, vodoravno ili dijagonalno.";
+    text[3] = "-Mozete baciti samo jedan zeton po okretu.";
+    text[4] = "-Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.";
     fstream datoteka("Pravila.bin", ios::binary | ios::out);
-    datoteka.write((char*)&p1, sizeof(p1));
-    datoteka.write((char*)&p2, sizeof(p2));
-    datoteka.write((char*)&p3, sizeof(p3));
-    datoteka.write((char*)&p4, sizeof(p4));
-    datoteka.write((char*)&p5, sizeof(p5));
+    for(int i=0;i<5;i++)
+        datoteka.write((char*)&text[i], sizeof(text[i]));
     datoteka.close();
     while (1)
     {
@@ -200,17 +197,18 @@ int main()
         cin.ignore();
         if (izbor == "1") {
             datoteka.open("Pravila.bin", ios::binary | ios::in);
-            datoteka.read((char*)&p1, sizeof(p1));
-            cout << p1 << endl;
-            datoteka.read((char*)&p2, sizeof(p2));
-            cout << p2 << endl;
-            datoteka.read((char*)&p3, sizeof(p3));
-            cout << p3 << endl;
-            datoteka.read((char*)&p4, sizeof(p4));
-            cout << p4 << endl;
-            datoteka.read((char*)&p5, sizeof(p5));
-            cout << p5 << endl;
-            datoteka.close();
+            if (datoteka.is_open())
+            {
+                for (int i = 0; i < 5; i++)
+                {
+                    datoteka.read((char*)&text[i], sizeof(text[i]));
+                    cout << text[i] << endl;
+                }
+                datoteka.close();
+                cout << endl;
+            }
+            else
+                cout << "Greska pri otvaranju datoteke!" << endl;
         }
         else if (izbor == "2") {
             PlayerInfo player1, player2;
