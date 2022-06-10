@@ -65,17 +65,22 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
 
 void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
 {
+    fstream saveGrid;
+    saveGrid.open("grid.bin", ios::binary | ios::out | ios::app);
     int lgt = 5, t = 0;
     do {
         if (grid[lgt][DropChoice - 1] == ' ')
         {
             grid[lgt][DropChoice - 1] = ActivePlayer.ID;
+            //spremanje žetona u polju
+            saveGrid.write((char*)&grid[lgt][DropChoice-1], sizeof(char));
             t = 1;
         }
         else
 
             --lgt;
     } while (t != 1);
+    saveGrid.close();
 }
 
 int Check4(char grid[5][8], PlayerInfo ActivePlayer, int win)
@@ -246,6 +251,10 @@ int main()
 
             player1.ID = 'X';
             player2.ID = 'O';
+            //spremanje žetona;
+            savePlayers.write((char*)&player1.ID, sizeof(char));
+            savePlayers.write((char*)&player2.ID, sizeof(char));
+            savePlayers.close();
             cout << endl << "Zeton 1. igraca ce biti: " << "\033[32m" << player1.ID << "\033[0m" << endl;
             cout << "Zeton 2. igraca ce biti: " << "\033[32m" << player2.ID << "\033[0m" << endl << endl;
 
@@ -254,19 +263,21 @@ int main()
             char grid[6][8];
             for (int i = 0; i < 5; i++)
             {
-                for (int j = 0; j < 7; j++)
+                for (int j = 0; j < 7; j++) 
+                {
                     grid[i][j] = ' ';
+                    saveGrid.write((char*)&grid[i][j], sizeof(char));
+                }
             }
             ShowGrid(grid);
             //spremanje polja,za svaki slučaj
-            saveGrid.write();
             
             int DropChoice, full = 0,again=0,win=0;
             //početak igre
             do
             {
                 DropChoice = PlayerDrop(grid, player1);
-                CheckBellow(grid, player1, DropChoice);
+                CheckBellow(grid, player1, DropChoice);  //spremanje mjesta ako je slobodno,mjesto je spoejno sa igračem
                 win = Check4(grid, player1, win);
                 system("cls");
                 ShowGrid(grid);
