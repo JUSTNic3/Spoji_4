@@ -10,7 +10,7 @@ struct PlayerInfo {
     char PlayerID{' '};
 };
 
-void ShowGrid(char grid[6][8])
+void Headline()
 {
     cout << "\t\t ___   ___   ___     " << endl;
     cout << "\t\t|     |   | |   |     |  |         /|" << endl;
@@ -20,6 +20,11 @@ void ShowGrid(char grid[6][8])
     cout << "        ____________________________________________________" << endl;
     cout << endl;
     cout << "\t           ";
+}
+
+void ShowGrid(char grid[6][8])
+{
+    Headline();
     for (int i = 0; i < 8; i++)
     {
         cout << i + 1 << "   ";
@@ -121,14 +126,7 @@ int restart(char grid[6][8])
         if (restart == 1)
         {
             system("cls");
-            cout << "\t ___   ___   ___     " << endl;
-            cout << "\t|     |   | |   |     |  |         /|" << endl;
-            cout << "\t|___  |___| |   |     |  |        / |" << endl;
-            cout << "\t    | |     |   |     |  |       /__|_" << endl;
-            cout << "\t ___| |     |___|  |__|  |          |" << endl;
-            cout << "        ____________________________________________________" << endl;
-            cout << endl;
-            cout << "\t           ";
+            Headline();
             for (int i = 0; i < 8; i++)
             {
                 cout << i + 1 << "   ";
@@ -196,6 +194,7 @@ int main()
         cin >> izbor;
         cin.ignore();
         if (izbor == "1") {
+            system("cls");
             datoteka.open("Pravila.bin", ios::binary | ios::in);
             if (datoteka.is_open())
             {
@@ -211,8 +210,8 @@ int main()
                 cout << "Greska pri otvaranju datoteke!" << endl;
         }
         else if (izbor == "2") {
-            PlayerInfo player1, player2;
             system("cls");
+            PlayerInfo player1, player2;
 
             cout << "ODABIR IMENA IGRACA" << endl << endl;
 	        do {
@@ -240,7 +239,7 @@ int main()
 
             system("pause");
             system("cls");
-            char grid[6][8]{' '};
+            char grid[6][8];
             for (int i = 0; i < 6; i++)
             {
                 for (int j = 0; j < 8; j++)
@@ -249,7 +248,7 @@ int main()
             ShowGrid(grid);
             
             int DropChoice, full = 0,again=0,win=0;
-
+            //početak igre
             do
             {
                 DropChoice = PlayerDrop(grid, player1);
@@ -308,38 +307,3 @@ int main()
 
 //https://www.thiscodeworks.com/game-connect-four-connect-four-is-a-two-player-board-game-in-which-the-players-alternately-drop-colored-disks-into-a/5ffdf8a20c8c140014566a1c
 //https://gist.github.com/MichaelEstes/7836988
-/*void player1(char grid[][7], int x, int y)
-{
-    show_grid(grid);
-
-    cout << "Drop a red disk at column (0–6): ";
-    cin >> y;
-    if (grid[x][y] == ' ')
-        grid[x][y] = 'R';
-    else {
-        //make sure not to target the same row
-        while (grid[x][y] != ' ')x--;
-        grid[x][y] = 'R';
-    }
-}
-
-void player2(char grid[][7],int x,int y)
-{
-    show_grid(grid);
-
-    cout << "Drop a yellow disk at column (0–6): ";
-    cin >> y;
-    if (grid[x][y] == ' ')
-        grid[x][y] = 'Y';
-    else {
-        //make sure not to target the same row
-        while (grid[x][y] != ' ')x--;
-        grid[x][y] = 'Y';
-    }
-
-}*/
-/*
--21 žeton za pojedinog igraèa
--2d polje
--funkcija za provjeru 4 iste boje paralelno,okomito i dijagonalno
--spremanje rezultata u bin file (dodatna moguænost:sortiranje rezultata prema broju pobjeda ili kronološki)*/
