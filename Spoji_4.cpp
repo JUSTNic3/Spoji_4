@@ -25,15 +25,15 @@ void Headline()
 void ShowGrid(char grid[6][8])
 {
     Headline();
-    for (int i = 0; i < 8; i++)
+    for (int i = 0; i < 7; i++)
     {
         cout << i + 1 << "   ";
     }
     cout << endl;
-    for (int i = 0; i < 6; i++)
+    for (int i = 0; i < 5; i++)
     {
         cout << "\t          ";
-        for (int j = 0; j < 8; j++)
+        for (int j = 0; j < 7; j++)
         {
             cout << "[" << grid[i][j] << "] ";
         }
@@ -113,15 +113,15 @@ int restart(char grid[6][8])
         {
             system("cls");
             Headline();
-            for (int i = 0; i < 8; i++)
+            for (int i = 0; i < 7; i++)
             {
                 cout << i + 1 << "   ";
             }
             cout << endl;
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 5; i++)
             {
                 cout << "\t          ";
-                for (int j = 0; j < 8; j++)
+                for (int j = 0; j < 7; j++)
                 {
                     cout << "[" << ' ' << "] ";
                     grid[i][j] = ' ';
@@ -140,7 +140,7 @@ int restart(char grid[6][8])
 int FullGrid(char grid[6][8])
 {
     int full = 0;
-    for (int i = 0; i < 8; ++i)
+    for (int i = 0; i < 7; ++i)
     {
         if (grid[1][i] != ' ')
             ++full;
@@ -203,7 +203,7 @@ int main()
             datoteka.open("Pravila.bin", ios::binary | ios::in);
             if (datoteka.is_open())
             {
-                for (int i = 0; i < 5; i++)
+                for (int i = 0; i < 4; i++)
                 {
                     datoteka.read((char*)&text[i], sizeof(text[i]));
                     cout << text[i] << endl;
