@@ -41,6 +41,7 @@ void ShowGrid(char grid[6][8])
     }
 }
 
+//checks
 int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
 {
     int DropChoice = 0;
@@ -62,7 +63,7 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
     } while (DropChoice < 1 || DropChoice > 8);
     return DropChoice;
 }
-
+//checks
 void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
 {
     fstream saveGrid;
@@ -82,7 +83,7 @@ void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
     } while (t != 1);
     saveGrid.close();
 }
-
+//checks
 int Check4(char grid[5][8], PlayerInfo ActivePlayer, int win)
 {
     char znak = ActivePlayer.ID;
@@ -108,7 +109,8 @@ int Check4(char grid[5][8], PlayerInfo ActivePlayer, int win)
     return win;
 }
 
-int restart(char grid[6][8])
+//checks
+int Restart(char grid[6][8])
 {
     int restart = 0;
     do {
@@ -141,7 +143,7 @@ int restart(char grid[6][8])
     } while (restart != 1 && restart != 2);
     return restart;
 }
-
+//chekcs
 int FullGrid(char grid[6][8])
 {
     int full = 0;
@@ -158,7 +160,8 @@ void PlayerWin(PlayerInfo ActivePlayer)
     cout << endl << "\033[32m" << ActivePlayer.Name << ", pobijedio si!" << "\033[0m" << endl;
 }
 
-bool nameCheck(PlayerInfo player1, PlayerInfo player2)
+//checks
+bool NameCheck(PlayerInfo player1, PlayerInfo player2)
 {
 
     player1.Name.erase(remove(player1.Name.begin(), player1.Name.end(), ' '), player1.Name.end());
@@ -186,10 +189,10 @@ int main()
     text[2] = "-Trebate skupiti 4 zetona iste boje u nizu: okomito, vodoravno ili dijagonalno.";
     text[3] = "-Mozete baciti samo jedan zeton po okretu.";
     text[4] = "-Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.";
-    fstream datoteka("Pravila.bin", ios::binary | ios::out);
+    fstream file("Rules.bin", ios::binary | ios::out);
     for(int i=0;i<5;i++)
-        datoteka.write((char*)&text[i], sizeof(text[i]));
-    datoteka.close();
+        file.write((char*)&text[i], sizeof(text[i]));
+    file.close();
     while (1)
     {
         system("cls");
@@ -199,27 +202,27 @@ int main()
         cout << "3. ispis rezultata" << endl;
         cout << "4. izlaz iz programa" << endl << endl;
         cout << "Vas odabir: ";
-        string izbor;
-        cin >> izbor;
+        string choice;
+        cin >> choice;
         cin.ignore();
-        if (izbor == "1") {
+        if (choice == "1") {
 
             system("cls");
-            datoteka.open("Pravila.bin", ios::binary | ios::in);
-            if (datoteka.is_open())
+            file.open("Rules.bin", ios::binary | ios::in);
+            if (file.is_open())
             {
                 for (int i = 0; i < 4; i++)
                 {
-                    datoteka.read((char*)&text[i], sizeof(text[i]));
+                    file.read((char*)&text[i], sizeof(text[i]));
                     cout << text[i] << endl;
                 }
-                datoteka.close();
+                file.close();
                 cout << endl;
             }
             else
                 cout << "Greska pri otvaranju datoteke!" << endl;
         }
-        else if (izbor == "2") {
+        else if (choice == "2") {
 
             fstream saveGrid("grid.bin", ios::binary | ios::out);
             fstream savePlayers("players.bin", ios::binary | ios::out);
@@ -245,7 +248,7 @@ int main()
 				        cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
 		        } while (player2.Name.empty());
 	
-	        } while (nameCheck(player1, player2));
+	        } while (NameCheck(player1, player2));
             //spremanje 2. igraca
             savePlayers.write((char*)&player2.Name, sizeof(player2.Name));
 
@@ -284,7 +287,7 @@ int main()
                 if(win == 1)
                 {
                     PlayerWin(player1);
-                    again = restart(grid);
+                    again = Restart(grid);
                     if (again == 2)
                         break;
                 }
@@ -299,7 +302,7 @@ int main()
                 if(win == 1)
                 {
                     PlayerWin(player2);
-                    again = restart(grid);
+                    again = Restart(grid);
                     if (again == 2)
                         break;
                 }
@@ -308,17 +311,17 @@ int main()
                 if(full == 8)
                 {
                     cout << endl << "\033[32m" << "Ploca je puna, rezultat je izjednacen!" << "\033[0m" << endl;
-                    again = restart(grid);
+                    again = Restart(grid);
                 }
             } while (again != 2);
 
         }
-        else if (izbor == "3") {
+        else if (choice == "3") {
 
             fstream results("grid.bin", ios::binary | ios::out);
 
         }
-        else if (izbor == "4") {
+        else if (choice == "4") {
 
             cout << "Dovidjenja!";
             break;
