@@ -1,14 +1,10 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
-#include <windows.h>
-#include <algorithm>
+#include "checks.h"
 using namespace std;
 
-struct PlayerInfo {
-    string Name;
-    char ID{' '};
-};
+struct PlayerInfo;
 
 void Headline()
 {
@@ -41,7 +37,7 @@ void ShowGrid(char grid[6][8])
     }
 }
 
-//checks
+/*//checks
 int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
 {
     int DropChoice = 0;
@@ -153,14 +149,14 @@ int FullGrid(char grid[6][8])
             ++full;
     }
     return full;
-}
+}*/
 
 void PlayerWin(PlayerInfo ActivePlayer)
 {
     cout << endl << "\033[32m" << ActivePlayer.Name << ", pobijedio si!" << "\033[0m" << endl;
 }
 
-//checks
+/*/checks
 bool NameCheck(PlayerInfo player1, PlayerInfo player2)
 {
 
@@ -177,7 +173,7 @@ bool NameCheck(PlayerInfo player1, PlayerInfo player2)
         cout << "\033[32m" << endl << "Ime 2. igraca (" << player2.Name << ") uspjesno dodano. :)" << "\033[0m" << endl << endl;
         return false;
     }
-}
+}*/
 
 
 
@@ -189,7 +185,7 @@ int main()
     text[2] = "-Trebate skupiti 4 zetona iste boje u nizu: okomito, vodoravno ili dijagonalno.";
     text[3] = "-Mozete baciti samo jedan zeton po okretu.";
     text[4] = "-Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.";
-    fstream file("Rules.bin", ios::binary | ios::out);
+    fstream file("rules.bin", ios::binary | ios::out);
     for(int i=0;i<5;i++)
         file.write((char*)&text[i], sizeof(text[i]));
     file.close();
@@ -208,7 +204,7 @@ int main()
         if (choice == "1") {
 
             system("cls");
-            file.open("Rules.bin", ios::binary | ios::in);
+            file.open("rules.bin", ios::binary | ios::in);
             if (file.is_open())
             {
                 for (int i = 0; i < 4; i++)
