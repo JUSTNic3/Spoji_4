@@ -1,48 +1,9 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <string>
-#include "checks.h"
+#include "GameChecks.h"
+#include "Output.h"
 using namespace std;
-
-struct PlayerInfo;
-
-void Headline()
-{
-    cout << "\t\t ___   ___   ___     " << endl;
-    cout << "\t\t|     |   | |   |     |  |         /|" << endl;
-    cout << "\t\t|___  |___| |   |     |  |        / |" << endl;
-    cout << "\t\t    | |     |   |     |  |       /__|_" << endl;
-    cout << "\t\t ___| |     |___|  |__|  |          |" << endl;
-    cout << "        ____________________________________________________" << endl;
-    cout << endl;
-    cout << "\t           ";
-}
-
-void ShowGrid(char grid[6][8])
-{
-    Headline();
-    for (int i = 0; i < 7; i++)
-    {
-        cout << i + 1 << "   ";
-    }
-    cout << endl;
-    for (int i = 0; i < 5; i++)
-    {
-        cout << "\t          ";
-        for (int j = 0; j < 7; j++)
-        {
-            cout << "[" << grid[i][j] << "] ";
-        }
-        cout << endl;
-    }
-}
-
-void PlayerWin(PlayerInfo ActivePlayer)
-{
-    cout << endl << "\033[32m" << ActivePlayer.Name << ", pobijedio si!" << "\033[0m" << endl;
-}
-
-
 
 int main()
 {
@@ -87,8 +48,8 @@ int main()
         }
         else if (choice == "2") {
 
-            fstream saveGrid("grid.bin", ios::binary | ios::out);
-            fstream savePlayers("players.bin", ios::binary | ios::out);
+           
+            
             PlayerInfo player1, player2;
             system("cls");
 
@@ -100,7 +61,7 @@ int main()
 			        cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
 	        } while (player1.Name.empty());
             //spremanje 1. igraca
-            savePlayers.write((char*) &player1.Name,sizeof(player1.Name));
+            
 	        cout << "\033[32m" << endl << "Ime 1. igraca (" << player1.Name << ") uspjesno dodano. :)" << "\033[0m" << endl << endl;
 	        do
 	        {
@@ -113,14 +74,13 @@ int main()
 	
 	        } while (NameCheck(player1, player2));
             //spremanje 2. igraca
-            savePlayers.write((char*)&player2.Name, sizeof(player2.Name));
+            
 
             player1.ID = 'X';
             player2.ID = 'O';
             //spremanje žetona;
-            savePlayers.write((char*)&player1.ID, sizeof(char));
-            savePlayers.write((char*)&player2.ID, sizeof(char));
-            savePlayers.close();
+            
+            
             cout << endl << "Zeton 1. igraca ce biti: " << "\033[32m" << player1.ID << "\033[0m" << endl;
             cout << "Zeton 2. igraca ce biti: " << "\033[32m" << player2.ID << "\033[0m" << endl << endl;
 
@@ -132,7 +92,7 @@ int main()
                 for (int j = 0; j < 7; j++) 
                 {
                     grid[i][j] = ' ';
-                    saveGrid.write((char*)&grid[i][j], sizeof(char));
+                    
                 }
             }
             ShowGrid(grid);

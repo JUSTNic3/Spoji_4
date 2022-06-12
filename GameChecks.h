@@ -1,16 +1,10 @@
 #pragma once
 #include <iostream>
-#include <fstream>
-#include <windows.h>
-#include <algorithm>
+#include <fstream>   //za save&load
+#include <windows.h> //za boje
+#include <algorithm> //za for_each
+#include "Output.h"  //za struct
 using namespace std;
-
-struct PlayerInfo {
-    string Name;
-    char ID{ ' ' };
-};
-void Headline();
-
 
 int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
 {
@@ -36,22 +30,22 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
 
 void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
 {
-    fstream saveGrid;
-    saveGrid.open("grid.bin", ios::binary | ios::out | ios::app);
+    
+   
     int lgt = 5, t = 0;
     do {
         if (grid[lgt][DropChoice - 1] == ' ')
         {
             grid[lgt][DropChoice - 1] = ActivePlayer.ID;
             //spremanje žetona u polju
-            saveGrid.write((char*)&grid[lgt][DropChoice - 1], sizeof(char));
+            
             t = 1;
         }
         else
 
             --lgt;
     } while (t != 1);
-    saveGrid.close();
+  
 }
 
 int Check4(char grid[5][8], PlayerInfo ActivePlayer, int win)
