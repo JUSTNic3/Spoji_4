@@ -7,15 +7,12 @@ using namespace std;
 
 int main()
 {
-    string text[5];
-    text[0] = "\t\t Pravila";
-    text[1] = "-Svaki igrac ima po 21 zeton (ukupno 42).";
-    text[2] = "-Trebate skupiti 4 zetona iste boje u nizu: okomito, vodoravno ili dijagonalno.";
-    text[3] = "-Mozete baciti samo jedan zeton po okretu.";
-    text[4] = "-Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.";
+    string text="\t\t Pravila\n- Svaki igrac ima po 21 zeton (ukupno 42)."
+                " \n- Trebate skupiti 4 zetona iste boje u nizu : okomito, vodoravno ili dijagonalno."
+                "\n- Mozete baciti samo jedan zeton po okretu."
+                 "\n- Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.";
     fstream file("rules.bin", ios::binary | ios::out);
-    for(int i=0;i<5;i++)
-        file.write((char*)&text[i], sizeof(text[i]));
+    file.write((char*)&text, sizeof(text));
     file.close();
     while (1)
     {
@@ -35,11 +32,8 @@ int main()
             file.open("rules.bin", ios::binary | ios::in);
             if (file.is_open())
             {
-                for (int i = 0; i < 4; i++)
-                {
-                    file.read((char*)&text[i], sizeof(text[i]));
-                    cout << text[i] << endl;
-                }
+                file.read((char*)&text, sizeof(text));
+                cout << text << endl;
                 file.close();
                 cout << endl;
             }
