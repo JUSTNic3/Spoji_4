@@ -5,7 +5,7 @@ using namespace std;
 
 struct PlayerInfo {
     string Name;
-    char ID;
+    char ID{' '};
 };
 
 void Headline()

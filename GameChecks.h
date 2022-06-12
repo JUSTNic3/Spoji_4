@@ -6,6 +6,8 @@
 #include "Output.h"  //za struct
 using namespace std;
 
+fstream save;
+
 int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
 {
     int DropChoice = 0;
@@ -30,19 +32,18 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
 
 void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
 {
-    
-   
+    save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
     int lgt = 5, t = 0;
     do {
         if (grid[lgt][DropChoice - 1] == ' ')
         {
             grid[lgt][DropChoice - 1] = ActivePlayer.ID;
             //spremanje žetona u polju
-            
+            save.write((char*) &grid[lgt][DropChoice - 1], sizeof(char));
+            save.close();
             t = 1;
         }
         else
-
             --lgt;
     } while (t != 1);
   
@@ -120,7 +121,7 @@ int FullGrid(char grid[6][8])
 
 bool NameCheck(PlayerInfo player1, PlayerInfo player2)
 {
-
+    save.open("SaveResults.bin", ios::binary | ios::out | ios::app);
     player1.Name.erase(remove(player1.Name.begin(), player1.Name.end(), ' '), player1.Name.end());
     player2.Name.erase(remove(player2.Name.begin(), player2.Name.end(), ' '), player2.Name.end());
 
@@ -131,7 +132,9 @@ bool NameCheck(PlayerInfo player1, PlayerInfo player2)
         return true;
     }
     else {
-        cout << "\033[32m" << endl << "Ime 2. igraca (" << player2.Name << ") uspjesno dodano. :)" << "\033[0m" << endl << endl;
+        save.write((char*)&player2.Name, sizeof(player2.Name));
+        cout << "\033[32m" << endl << "Ime 2. igraca (" << player2.Name << ") uspjesno spremljeno. :)" << "\033[0m" << endl << endl;
+        save.close();
         return false;
     }
 }
