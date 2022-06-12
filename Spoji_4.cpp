@@ -6,7 +6,7 @@
 using namespace std;
 
 struct Flags {
-    int deleting = 0;
+    int deleting;
     int win = 0;
     int full = 0;
     int again = 0;
@@ -15,18 +15,17 @@ struct Flags {
 
 int main()
 {
+    fstream file("rules.bin", ios::binary | ios::out);
     string text="\t\t Pravila\n- Svaki igrac ima po 21 zeton (ukupno 42)."
                 " \n- Trebate skupiti 4 zetona iste boje u nizu : okomito, vodoravno ili dijagonalno."
                 "\n- Mozete baciti samo jedan zeton po okretu."
                  "\n- Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.";
+    file.write((char*)&text, sizeof(text));
+    file.close();
 
     PlayerInfo player1, player2;
     Flags info;//je za zastavice koje ce nam pomoc pri loadanju igre prije gasenja programa
-    
-    fstream file("rules.bin", ios::binary | ios::out);
     char grid[6][8];
-    file.write((char*)&text, sizeof(text));
-    file.close();
 
     while (1)
     {
@@ -55,8 +54,10 @@ int main()
                 cout << "Greska pri otvaranju datoteke!" << endl;
         }
         else if (choiceMenu == "2") {
-            
+
+            fstream save;
             system("cls");
+
             cout << "ODABIR IMENA IGRACA" << endl << endl;
             cout << "Spremanje igraca i zetona ce se izvrsiti pojedinacno" << endl;
 	        do {
@@ -65,6 +66,7 @@ int main()
 		        if(player1.Name.empty())
 			        cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
 	        } while (player1.Name.empty());
+
             //spremanje 1. igraca
             save.open("SaveResults.bin",ios::binary | ios::app | ios::out);
             save.write((char*) &player1.Name,sizeof(player1.Name));
@@ -85,10 +87,14 @@ int main()
             player1.ID = 'X';
             player2.ID = 'O';
             //spremanje žetona;
-            ofstream save("SaveResults.bin", ios::binary | ios::app);
+            save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
             save.write((char*)&player1.ID, sizeof(player1.ID));
+            save.close();
+            save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
             save.write((char*)&player2.ID, sizeof(player2.ID));
-            //save.close();
+            save.close();
+
+
             cout << endl << "Zeton 1. igraca ce biti: " << "\033[32m" << player1.ID << "\033[0m" << endl;
             cout << "Zeton 2. igraca ce biti: " << "\033[32m" << player2.ID << "\033[0m" << endl << endl;
 
@@ -96,16 +102,16 @@ int main()
             system("cls");
 
             //spremanje polja,za svaki slučaj
-            //ofstream save("SaveResults.bin", ios::binary | ios::app);
-            for (int i = 0; i < 5; i++)
+            save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
+            for (int i = 0; i < 6; i++)
             {
-                for (int j = 0; j < 7; j++) 
+                for (int j = 0; j < 8; j++) 
                 {
                     grid[i][j] = ' ';
                     save.write((char*)&grid[i][j], sizeof(char));   //spremanje polja ak neko izađe iz igre
                 }
             }
-            //save.close();
+            save.close();
             ShowGrid(grid);
             
             
@@ -113,6 +119,9 @@ int main()
             //početak igre
             do
             {
+                info.deleting = 0;
+                save.write((char*)&info.deleting, sizeof(int));
+                save.close();
                 DropChoice = PlayerDrop(grid, player1);
                 CheckBellow(grid, player1, DropChoice);  //spremanje mjesta ako je slobodno,mjesto je spoejno sa igračem
                 win = Check4(grid, player1, win);
@@ -147,53 +156,12 @@ int main()
                     cout << endl << "\033[32m" << "Ploca je puna, rezultat je izjednacen!" << "\033[0m" << endl;
                     again = Restart(grid);
                 }
-            } while (again != 2); 
-            save.write((char*)&info.deleting, sizeof(int));
-            save.close();
+            } while (again != 2);
+            
         }
         else if (choiceMenu == "3") {
 
-            //loadanje imena igrača,zetona sa igracima i mape
-            fstream save("SaveResults.bin", ios::binary | ios::app | ios::in);
-            save.read((char*)&player1.Name, sizeof(player1.Name));
-            cout << player1.Name << endl;
-            string choiceRead;
-            do 
-            {
-                if (info.deleting == 0)
-                {
-                     for (int i = 0; i < 5; i++)
-                     {
-                         for (int j = 0; j < 7; j++)
-                         {
-                             save.read((char*)&grid[i][j], sizeof(char));
-                             cout << grid[i][j] << " ";
-                         }
-                         cout << endl;
-                     }
-                     save.close();
-                }
-                cout << "Jeste li pogledali rezultate? Da(1) Ne(2)" << endl;
-                cin >> choiceRead;
-                if (choiceRead == "1")
-                {
-                    info.deleting = 1;
-                    save.open("SaveResults.bin", ios::binary);
-                    save.close();
-                    save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
-                    save.write((char*)&info.deleting, sizeof(int));
-                    save.close();
-                    
-                }
-                else if (choiceRead == "2")
-                {
-                    system("pause");
-                    system("cls");
-                }
-                else
-                    cout << "Krivi unos! Pokusajte ponovno." << endl;
-            } while (choiceRead  != "1");
-               
+            
         }
         else if (choiceMenu == "4") {
 
@@ -203,8 +171,7 @@ int main()
         else {
             cout << "Krivi unos!" << endl;
         }
-
-        system("pause");
+    system("pause");
     }
 }
 
