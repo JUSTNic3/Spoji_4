@@ -63,10 +63,10 @@ int Check4(char grid[5][8], PlayerInfo ActivePlayer, int win)
                 win = 1;
             if (grid[i][j] == znak && grid[i + 1][j] == znak && grid[i + 2][j] == znak && grid[i + 3][j] == znak)
                 win = 1;
-            if (i < 2 && j > 3)
+            //if (i < 2 && j > 3)
                 if (grid[i][j] == znak && grid[i + 1][j - 1] == znak && grid[i + 2][j - 2] == znak && grid[i + 3][j - 3] == znak)
                     win = 1;
-            if (j > 2)
+            //if (j > 2)
                 if (grid[i][j] == znak && grid[i][j - 1] == znak && grid[i][j - 2] == znak && grid[i][j - 3] == znak)
                     win = 1;
         }
@@ -121,7 +121,7 @@ int FullGrid(char grid[6][8])
 
 bool NameCheck(PlayerInfo player1, PlayerInfo player2)
 {
-    save.open("SaveResults.bin", ios::binary | ios::out | ios::app);
+    
     player1.Name.erase(remove(player1.Name.begin(), player1.Name.end(), ' '), player1.Name.end());
     player2.Name.erase(remove(player2.Name.begin(), player2.Name.end(), ' '), player2.Name.end());
 
@@ -132,6 +132,7 @@ bool NameCheck(PlayerInfo player1, PlayerInfo player2)
         return true;
     }
     else {
+        save.open("SaveResults.bin", ios::binary | ios::out | ios::app);
         save.write((char*)&player2.Name, sizeof(player2.Name));
         cout << "\033[32m" << endl << "Ime 2. igraca (" << player2.Name << ") uspjesno spremljeno. :)" << "\033[0m" << endl << endl;
         save.close();

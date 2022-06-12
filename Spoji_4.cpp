@@ -12,21 +12,6 @@ struct Flags {
     int again = 0;
 };
 
-bool FlagsWrite(Flags flag)
-{
-    save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
-    save.write((char*) &flag.deleting,sizeof(int));
-    save.close();
-    return 0;
-}
-
-bool FlagsRead(Flags flag)
-{
-    save.open("SaveResults.bin", ios::binary | ios::app | ios::in);
-    save.read((char*)&flag.deleting, sizeof(int));
-    save.close();
-    return 0;
-}
 
 int main()
 {
@@ -37,7 +22,7 @@ int main()
 
     PlayerInfo player1, player2;
     Flags info;//je za zastavice koje ce nam pomoc pri loadanju igre prije gasenja programa
-    fstream save("SaveResults.bin", ios::binary | ios::out);
+    
     fstream file("rules.bin", ios::binary | ios::out);
     char grid[6][8];
     file.write((char*)&text, sizeof(text));
@@ -81,7 +66,9 @@ int main()
 			        cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
 	        } while (player1.Name.empty());
             //spremanje 1. igraca
+            save.open("SaveResults.bin",ios::binary | ios::app | ios::out);
             save.write((char*) &player1.Name,sizeof(player1.Name));
+            save.close();
 	        cout << "\033[32m" << endl << "Ime 1. igraca (" << player1.Name << ") uspjesno spremljeno. :)" << "\033[0m" << endl << endl;
 	        do
 	        {
@@ -98,10 +85,10 @@ int main()
             player1.ID = 'X';
             player2.ID = 'O';
             //spremanje žetona;
-            save.open("SaveResults.bin", ios::binary | ios::out | ios::app);
+            ofstream save("SaveResults.bin", ios::binary | ios::app);
             save.write((char*)&player1.ID, sizeof(player1.ID));
             save.write((char*)&player2.ID, sizeof(player2.ID));
-            save.close();
+            //save.close();
             cout << endl << "Zeton 1. igraca ce biti: " << "\033[32m" << player1.ID << "\033[0m" << endl;
             cout << "Zeton 2. igraca ce biti: " << "\033[32m" << player2.ID << "\033[0m" << endl << endl;
 
@@ -109,7 +96,7 @@ int main()
             system("cls");
 
             //spremanje polja,za svaki slučaj
-            save.open("SaveResults.bin", ios::binary | ios::out | ios::app);
+            //ofstream save("SaveResults.bin", ios::binary | ios::app);
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 7; j++) 
@@ -118,7 +105,7 @@ int main()
                     save.write((char*)&grid[i][j], sizeof(char));   //spremanje polja ak neko izađe iz igre
                 }
             }
-            save.close();
+            //save.close();
             ShowGrid(grid);
             
             
@@ -161,21 +148,19 @@ int main()
                     again = Restart(grid);
                 }
             } while (again != 2); 
-            FlagsWrite(info);
+            save.write((char*)&info.deleting, sizeof(int));
+            save.close();
         }
         else if (choiceMenu == "3") {
 
             //loadanje imena igrača,zetona sa igracima i mape
-            save.open("SaveResults.bin", ios::binary | ios::app | ios::in);
-            save.read((char*)&info.deleting, sizeof(int));
-            int* t = &info.deleting;
+            fstream save("SaveResults.bin", ios::binary | ios::app | ios::in);
             save.read((char*)&player1.Name, sizeof(player1.Name));
             cout << player1.Name << endl;
-                
             string choiceRead;
             do 
             {
-                if (&t == 0)
+                if (info.deleting == 0)
                 {
                      for (int i = 0; i < 5; i++)
                      {
@@ -186,15 +171,19 @@ int main()
                          }
                          cout << endl;
                      }
+                     save.close();
                 }
                 cout << "Jeste li pogledali rezultate? Da(1) Ne(2)" << endl;
                 cin >> choiceRead;
                 if (choiceRead == "1")
                 {
                     info.deleting = 1;
-                    FlagsWrite(info);
                     save.open("SaveResults.bin", ios::binary);
                     save.close();
+                    save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
+                    save.write((char*)&info.deleting, sizeof(int));
+                    save.close();
+                    
                 }
                 else if (choiceRead == "2")
                 {
