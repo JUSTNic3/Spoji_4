@@ -62,10 +62,10 @@ int Check4(char grid[5][8], PlayerInfo ActivePlayer, int win)
                 win = 1;
             if (grid[i][j] == znak && grid[i + 1][j] == znak && grid[i + 2][j] == znak && grid[i + 3][j] == znak)
                 win = 1;
-            if (i < 2 && j > 3)
+            //if (i < 2 && j > 3)
                 if (grid[i][j] == znak && grid[i + 1][j - 1] == znak && grid[i + 2][j - 2] == znak && grid[i + 3][j - 3] == znak)
                     win = 1;
-            if (j > 2)
+            //if (j > 2)
                 if (grid[i][j] == znak && grid[i][j - 1] == znak && grid[i][j - 2] == znak && grid[i][j - 3] == znak)
                     win = 1;
         }
