@@ -28,10 +28,10 @@ void ShowGrid(char grid[6][8])
         cout << i + 1 << "   ";
     }
     cout << endl;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 6; i++)
     {
         cout << "\t          ";
-        for (int j = 0; j < 7; j++)
+        for (int j = 0; j < 8; j++)
         {
             cout << "[" << grid[i][j] << "] ";
         }

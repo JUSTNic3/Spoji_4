@@ -6,6 +6,8 @@
 #include "Output.h"  //za struct
 using namespace std;
 
+
+
 int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
 {
     int DropChoice = 0;
@@ -30,31 +32,30 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
 
 void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
 {
-    
-   
+    fstream save;
+    save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
     int lgt = 5, t = 0;
     do {
         if (grid[lgt][DropChoice - 1] == ' ')
         {
             grid[lgt][DropChoice - 1] = ActivePlayer.ID;
             //spremanje žetona u polju
-            
+            save.write((char*) &grid[lgt][DropChoice - 1], sizeof(char));
+            save.close();
             t = 1;
         }
         else
-
             --lgt;
     } while (t != 1);
-  
 }
 
-int Check4(char grid[5][8], PlayerInfo ActivePlayer, int win)
+int Check4(char grid[6][8], PlayerInfo ActivePlayer, int win)
 {
     char znak = ActivePlayer.ID;
     win = 0;
-    for (int i = 0; i < 5; i++)
+    for (int i = 0; i < 6; i++)
     {
-        for (int j = 0; j < 7; j++)
+        for (int j = 0; j < 8; j++)
         {
             if (grid[i][j] == znak && grid[i + 1][j + 1] == znak && grid[i + 2][j + 2] == znak && grid[i + 3][j + 3] == znak)
                 win = 1;
@@ -83,15 +84,15 @@ int Restart(char grid[6][8])
         {
             system("cls");
             Headline();
-            for (int i = 0; i < 7; i++)
+            for (int i = 0; i < 8; i++)
             {
                 cout << i + 1 << "   ";
             }
             cout << endl;
-            for (int i = 0; i < 5; i++)
+            for (int i = 0; i < 6; i++)
             {
                 cout << "\t          ";
-                for (int j = 0; j < 7; j++)
+                for (int j = 0; j < 8; j++)
                 {
                     cout << "[" << ' ' << "] ";
                     grid[i][j] = ' ';
@@ -110,7 +111,7 @@ int Restart(char grid[6][8])
 int FullGrid(char grid[6][8])
 {
     int full = 0;
-    for (int i = 0; i < 7; ++i)
+    for (int i = 0; i < 8; ++i)
     {
         if (grid[1][i] != ' ')
             ++full;
@@ -120,7 +121,7 @@ int FullGrid(char grid[6][8])
 
 bool NameCheck(PlayerInfo player1, PlayerInfo player2)
 {
-
+    fstream save;
     player1.Name.erase(remove(player1.Name.begin(), player1.Name.end(), ' '), player1.Name.end());
     player2.Name.erase(remove(player2.Name.begin(), player2.Name.end(), ' '), player2.Name.end());
 
@@ -131,7 +132,10 @@ bool NameCheck(PlayerInfo player1, PlayerInfo player2)
         return true;
     }
     else {
-        cout << "\033[32m" << endl << "Ime 2. igraca (" << player2.Name << ") uspjesno dodano. :)" << "\033[0m" << endl << endl;
+        save.open("SaveResults.bin", ios::binary | ios::out | ios::app);
+        save.write((char*)&player2.Name, sizeof(player2.Name));
+        cout << "\033[32m" << endl << "Ime 2. igraca (" << player2.Name << ") uspjesno spremljeno. :)" << "\033[0m" << endl << endl;
+        save.close();
         return false;
     }
 }
