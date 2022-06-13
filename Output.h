@@ -23,7 +23,7 @@ void Headline()
 void ShowGrid(char grid[6][8])
 {
     Headline();
-    for (int i = 0; i < 7; i++)
+    for (int i = 0; i < 8; i++)
     {
         cout << i + 1 << "   ";
     }
@@ -39,7 +39,7 @@ void ShowGrid(char grid[6][8])
     }
 }
 
-void PlayerWin(PlayerInfo ActivePlayer)
+void PlayerWin(string player)
 {
-    cout << endl << "\033[32m" << ActivePlayer.Name << ", pobijedio si!" << "\033[0m" << endl;
+    cout << endl << "\033[32m" << player << ", pobijedio si!" << "\033[0m" << endl;
 }

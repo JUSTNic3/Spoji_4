@@ -5,13 +5,6 @@
 #include "Output.h"
 using namespace std;
 
-struct Flags {
-    int deleting;
-    int win = 0;
-    int full = 0;
-    int again = 0;
-};
-
 
 int main()
 {
@@ -23,9 +16,11 @@ int main()
     file.write((char*)&text, sizeof(text));
     file.close();
 
-    PlayerInfo player1, player2;
-    Flags info;//je za zastavice koje ce nam pomoc pri loadanju igre prije gasenja programa
+    string* player = new string[2];
+    char* id = new char[2]{'X','O'};
+    //je za zastavice koje ce nam pomoc pri loadanju igre prije gasenja programa
     char grid[6][8];
+
 
     while (1)
     {
@@ -55,101 +50,71 @@ int main()
         }
         else if (choiceMenu == "2") {
 
-            fstream save;
+            
             system("cls");
-
             cout << "ODABIR IMENA IGRACA" << endl << endl;
             cout << "Spremanje igraca i zetona ce se izvrsiti pojedinacno" << endl;
-	        do {
-		        cout << "Unesite ime 1. igraca: ";
-		        getline(cin, player1.Name);
-		        if(player1.Name.empty())
-			        cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
-	        } while (player1.Name.empty());
 
-            //spremanje 1. igraca
-            save.open("SaveResults.bin",ios::binary | ios::app | ios::out);
-            save.write((char*) &player1.Name,sizeof(player1.Name));
-            save.close();
-	        cout << "\033[32m" << endl << "Ime 1. igraca (" << player1.Name << ") uspjesno spremljeno. :)" << "\033[0m" << endl << endl;
+            do {
+		            cout << "Unesite ime 1.igraca: ";
+		            getline(cin, player[0]);
+		            if(player[0].empty())
+			            cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
+            } while (player[0].empty()); 
+	        cout << "\033[32m" << endl << "Ime 1. igraca (" << player[0] << ") uspjesno spremljeno. :)" << "\033[0m" << endl << endl;
 	        do
 	        {
 		        do {
 			        cout << "Unesite ime 2. igraca: ";
-			        getline(cin, player2.Name);
-			        if(player2.Name.empty())
+			        getline(cin, player[1]);
+			        if(player[1].empty())
 				        cout << "\033[31m" << "Niste unijeli ime igraca! Pokusajte ponovno!" << "\033[0m" << endl;
-		        } while (player2.Name.empty());
+		        } while (player[1].empty());
 	
-	        } while (NameCheck(player1, player2));
-           
-
-            player1.ID = 'X';
-            player2.ID = 'O';
-            //spremanje žetona;
-            save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
-            save.write((char*)&player1.ID, sizeof(player1.ID));
-            save.close();
-            save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
-            save.write((char*)&player2.ID, sizeof(player2.ID));
-            save.close();
-
-
-            cout << endl << "Zeton 1. igraca ce biti: " << "\033[32m" << player1.ID << "\033[0m" << endl;
-            cout << "Zeton 2. igraca ce biti: " << "\033[32m" << player2.ID << "\033[0m" << endl << endl;
-
+	        } while (NameCheck(player[0], player[1]));
+           ofstream save("save.bin", ios::binary);
+           for (int i = 0; i < 2; i++)
+           {
+               save.write((char*)&player[i], sizeof(player[i]));
+               save.write((char*)&id[i], sizeof(id[i]));
+           }
+           save.close();
+            for(int i=0;i<2;i++)
+                cout << "Zeton " << i+1 << ". igraca ce biti: " << "\033[32m" << id[i] << "\033[0m" << endl;
             system("pause");
             system("cls");
 
             //spremanje polja,za svaki slučaj
-            save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
+            
             for (int i = 0; i < 6; i++)
             {
                 for (int j = 0; j < 8; j++) 
                 {
                     grid[i][j] = ' ';
-                    save.write((char*)&grid[i][j], sizeof(char));   //spremanje polja ak neko izađe iz igre
+                      //spremanje polja ak neko izađe iz igre
                 }
             }
-            save.close();
+            
             ShowGrid(grid);
-            
-            
-            int DropChoice, full = 0,again=0,win=0;
             //početak igre
+            int DropChoice, full = 0,again=0,win=0;
             do
             {
-                info.deleting = 0;
-                save.write((char*)&info.deleting, sizeof(int));
-                save.close();
-                DropChoice = PlayerDrop(grid, player1);
-                CheckBellow(grid, player1, DropChoice);  //spremanje mjesta ako je slobodno,mjesto je spoejno sa igračem
-                win = Check4(grid, player1, win);
-                system("cls");
-                ShowGrid(grid);
-                if(win == 1)
+                for (int i = 0; i < 2;i++)
                 {
-                    PlayerWin(player1);
-                    again = Restart(grid);
-                    if (again == 2)
-                        break;
+                    DropChoice = PlayerDrop(grid, player[i], id[i]);
+                    CheckBellow(grid, id[i], DropChoice);
+                    system("cls");
+                    ShowGrid(grid);
+                    win = Check4(grid, id[i], win);
+                    if (win == 1)
+                    {
+                        PlayerWin(player[i]);
+                        again = Restart(grid);
+                        if (again == 2)
+                            break;
+                    }
                 }
-                system("cls");
-
-                ShowGrid(grid);
-                DropChoice = PlayerDrop(grid, player2);
-                CheckBellow(grid, player2, DropChoice);
-                system("cls");
-                ShowGrid(grid);
-                win = Check4(grid, player2, win);
-                if(win == 1)
-                {
-                    PlayerWin(player2);
-                    again = Restart(grid);
-                    if (again == 2)
-                        break;
-                }
-
                 full=FullGrid(grid);
                 if(full == 8)
                 {
@@ -160,8 +125,17 @@ int main()
             
         }
         else if (choiceMenu == "3") {
+            ifstream save("save.bin", ios::binary);
 
-            
+            for (int i = 0; i < 2; i++)
+            {
+                save.read((char*)&player[i], sizeof(char));
+                cout << player[i] << endl;
+                save.read((char*)&id[i], sizeof(char));
+                cout << id[i] << endl;
+            }
+            save.close();
+        
         }
         else if (choiceMenu == "4") {
 

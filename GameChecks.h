@@ -8,12 +8,12 @@ using namespace std;
 
 
 
-int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
+int PlayerDrop(char grid[6][8], string player, char id)
 {
     int DropChoice = 0;
     do
     {
-        cout << endl << ActivePlayer.Name << "(" << "\033[32m" << ActivePlayer.ID << "\033[0m" << ")" << ", tvoj red. ";
+        cout << endl << player << "(" << "\033[32m" << id << "\033[0m" << ")" << ", tvoj red. ";
         cout << "Molim unesite broj stupac izmedu 1 i 8: ";
         cin >> DropChoice;
         if (DropChoice > 0 && DropChoice < 9)
@@ -30,18 +30,14 @@ int PlayerDrop(char grid[6][8], PlayerInfo ActivePlayer)
     return DropChoice;
 }
 
-void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
+void CheckBellow(char grid[6][8], char id, int DropChoice)
 {
-    fstream save;
-    save.open("SaveResults.bin", ios::binary | ios::app | ios::out);
     int lgt = 5, t = 0;
     do {
         if (grid[lgt][DropChoice - 1] == ' ')
         {
-            grid[lgt][DropChoice - 1] = ActivePlayer.ID;
+            grid[lgt][DropChoice - 1] = id;
             //spremanje žetona u polju
-            save.write((char*) &grid[lgt][DropChoice - 1], sizeof(char));
-            save.close();
             t = 1;
         }
         else
@@ -49,9 +45,9 @@ void CheckBellow(char grid[6][8], PlayerInfo ActivePlayer, int DropChoice)
     } while (t != 1);
 }
 
-int Check4(char grid[6][8], PlayerInfo ActivePlayer, int win)
+int Check4(char grid[6][8], char id, int win)
 {
-    char znak = ActivePlayer.ID;
+    char znak = id;
     win = 0;
     for (int i = 0; i < 6; i++)
     {
@@ -119,23 +115,22 @@ int FullGrid(char grid[6][8])
     return full;
 }
 
-bool NameCheck(PlayerInfo player1, PlayerInfo player2)
+bool NameCheck(string player1, string player2)
 {
-    fstream save;
-    player1.Name.erase(remove(player1.Name.begin(), player1.Name.end(), ' '), player1.Name.end());
-    player2.Name.erase(remove(player2.Name.begin(), player2.Name.end(), ' '), player2.Name.end());
+    
+    player1.erase(remove(player1.begin(), player1.end(), ' '), player1.end());
+    player2.erase(remove(player2.begin(), player2.end(), ' '), player2.end());
 
-    for_each(player1.Name.begin(), player1.Name.end(), [](char& c) {c = tolower(c); });
-    for_each(player2.Name.begin(), player2.Name.end(), [](char& c) {c = tolower(c); });
-    if (player1.Name == player2.Name) {
+    for_each(player1.begin(), player1.end(), [](char& c) {c = tolower(c); });
+    for_each(player2.begin(), player2.end(), [](char& c) {c = tolower(c); });
+    if (player1 == player2) {
         cout << "\033[31m" << "Ime je vec upotrebljeno! Pokusajte ponovmo!" << "\033[0m" << endl;
         return true;
     }
     else {
-        save.open("SaveResults.bin", ios::binary | ios::out | ios::app);
-        save.write((char*)&player2.Name, sizeof(player2.Name));
-        cout << "\033[32m" << endl << "Ime 2. igraca (" << player2.Name << ") uspjesno spremljeno. :)" << "\033[0m" << endl << endl;
-        save.close();
+        
+        cout << "\033[32m" << endl << "Ime 2. igraca (" << player2 << ") uspjesno spremljeno. :)" << "\033[0m" << endl << endl;
+        
         return false;
     }
 }
