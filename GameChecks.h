@@ -1,17 +1,12 @@
 #pragma once
 #include <iostream>
-#include <typeinfo> //provjera vrste varijable
 #include <fstream>   //za save&load
 #include <windows.h> //za boje
 #include <algorithm> //za for_each
 #include "Output.h"  //za struct
 using namespace std;
 
-struct info {
-    int full = 0;
-    int win[2];
-    int lastPlayer = 0;
-};
+
 
 int PlayerDrop(char grid[6][8], string player, char id)
 {
@@ -42,6 +37,7 @@ void CheckBellow(char grid[6][8], char id, int DropChoice)
         if (grid[lgt][DropChoice - 1] == ' ')
         {
             grid[lgt][DropChoice - 1] = id;
+            //spremanje žetona u polju
             t = 1;
         }
         else
@@ -49,36 +45,36 @@ void CheckBellow(char grid[6][8], char id, int DropChoice)
     } while (t != 1);
 }
 
-int Check4(char grid[6][8], char id, info flag,int x)
+int Check4(char grid[6][8], char id, int win)
 {
     char znak = id;
-    flag.win[x] = 0;
+    win = 0;
     for (int i = 0; i < 6; i++)
     {
         for (int j = 0; j < 8; j++)
         {
             if (grid[i][j] == znak && grid[i + 1][j + 1] == znak && grid[i + 2][j + 2] == znak && grid[i + 3][j + 3] == znak)
-                flag.win[x] = 1;
+                win = 1;
             if (grid[i][j] == znak && grid[i][j + 1] == znak && grid[i][j + 2] == znak && grid[i][j + 3] == znak)
-                flag.win[x] = 1;
+                win = 1;
             if (grid[i][j] == znak && grid[i + 1][j] == znak && grid[i + 2][j] == znak && grid[i + 3][j] == znak)
-                flag.win[x] = 1;
+                win = 1;
             //if (i < 2 && j > 3)
-                if (grid[i][j] == znak && grid[i + 1][j - 1] == znak && grid[i + 2][j - 2] == znak && grid[i + 3][j - 3] == znak)
-                    flag.win[x] = 1;
+            if (grid[i][j] == znak && grid[i + 1][j - 1] == znak && grid[i + 2][j - 2] == znak && grid[i + 3][j - 3] == znak)
+                win = 1;
             //if (j > 2)
-                if (grid[i][j] == znak && grid[i][j - 1] == znak && grid[i][j - 2] == znak && grid[i][j - 3] == znak)
-                    flag.win[x] = 1;
+            if (grid[i][j] == znak && grid[i][j - 1] == znak && grid[i][j - 2] == znak && grid[i][j - 3] == znak)
+                win = 1;
         }
     }
-    return flag.win[x];
+    return win;
 }
 
 int Restart(char grid[6][8])
 {
     int restart = 0;
     do {
-        cout << "Zelite li zaigrati ponovno? Da(1) Ne(2) ";
+        cout << "Zelite li zaigrati ponovno? Da(1) Ne(2)" << endl;
         cin >> restart;
         if (restart == 1)
         {
@@ -108,20 +104,20 @@ int Restart(char grid[6][8])
     return restart;
 }
 
-int FullGrid(char grid[6][8],info flag)
+int FullGrid(char grid[6][8])
 {
-    flag.full = 0;
+    int full = 0;
     for (int i = 0; i < 8; ++i)
     {
         if (grid[1][i] != ' ')
-            ++flag.full;
+            ++full;
     }
-    return flag.full;
+    return full;
 }
 
 bool NameCheck(string player1, string player2)
 {
-    
+
     player1.erase(remove(player1.begin(), player1.end(), ' '), player1.end());
     player2.erase(remove(player2.begin(), player2.end(), ' '), player2.end());
 
@@ -132,11 +128,9 @@ bool NameCheck(string player1, string player2)
         return true;
     }
     else {
-        
+
         cout << "\033[32m" << endl << "Ime 2. igraca (" << player2 << ") uspjesno spremljeno. :)" << "\033[0m" << endl << endl;
-        
+
         return false;
     }
 }
-
-

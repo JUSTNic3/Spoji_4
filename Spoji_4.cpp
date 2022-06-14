@@ -5,38 +5,32 @@
 #include "Output.h"
 using namespace std;
 
-struct info;
 
 int main()
 {
-    
+    fstream file("rules.bin", ios::binary | ios::out);
     string text = "\t\t Pravila\n- Svaki igrac ima po 21 zeton (ukupno 42)."
         " \n- Trebate skupiti 4 zetona iste boje u nizu : okomito, vodoravno ili dijagonalno."
         "\n- Mozete baciti samo jedan zeton po okretu."
         "\n- Prvi igrac koji spoji 4 jednobojna zetona pobjeduje.";
-    fstream file("Rules.bin", ios::binary | ios::out);
     file.write((char*)&text, sizeof(text));
     file.close();
 
+    string* player = new string[2];
+    char* id = new char[2]{ 'X','O' };
     char grid[6][8] = { {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '},
                     {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '} };
-
-    string* player = new string[2];
-    char* id = new char[2]{ 'X','O' };
-
-    info flag;
-    int DropChoice, again = 0;
     while (1)
     {
         system("cls");
         cout << "Dobrodosli u Spoji 4" << endl << endl;
         cout << "1. ispis pravila igre" << endl;
-        cout << "2. pocetak nove igre" << endl;
-        cout << "3. ucitavanje prosle igre" << endl;
+        cout << "2. pocetak igre" << endl;
+        cout << "3. ispis rezultata" << endl;
         cout << "4. izlaz iz programa" << endl << endl;
         cout << "Vas odabir: ";
         string choiceMenu;
@@ -45,7 +39,7 @@ int main()
         if (choiceMenu == "1") {
 
             system("cls");
-            file.open("Rules.bin", ios::binary | ios::in);
+            file.open("rules.bin", ios::binary | ios::in);
             if (file.is_open())
             {
                 file.read((char*)&text, sizeof(text));
@@ -61,8 +55,8 @@ int main()
 
             system("cls");
             cout << "ODABIR IMENA IGRACA" << endl << endl;
-            cout << "Igraci se spremaju napon sto se oba igraca unesu." << endl 
-                 << "Imena igraca moraju imati maksimalno 32 znaka, u suprotonome se string skracuje" << endl << endl;
+            cout << "Igraci se spremaju napon sto se oba igraca unesu." << endl
+                << "Imena igraca moraju imati maksimalno 32 znaka, u suprotonome se string skracuje" << endl << endl;
 
             do {
                 cout << "Unesite ime 1.igraca: ";
@@ -82,13 +76,14 @@ int main()
 
             } while (NameCheck(player[0], player[1]));
 
-
-            ofstream save("savePlayers.bin", ios::binary | ios::out);
+            //sejvanje igraca
+            ofstream save("save.bin", ios::binary | ios::out);
             player[0].resize(32);
             player[1].resize(32);
             for (int i = 0; i < 2; i++)
                 save.write((char*)&player[i][0], 32);
             save.close();
+
 
 
             for (int i = 0; i < 2; i++)
@@ -97,98 +92,67 @@ int main()
             system("cls");
 
 
+
             ShowGrid(grid);
-            //int DropChoice, again = 0;
-        game:
-            /*ifstream saveGrid("saveGrid.bin", ios::binary | ios::in);
-            saveGrid.read((char*)&grid, sizeof(grid));
-            saveGrid.close();*/
+            //početak igre
+            int DropChoice, full = 0, again = 0;
+            int* win = new int[2]{' '};
+            //igra
+            fstream saveGrid("saveGrid.bin", ios::binary | ios::out | ios::trunc);
+            save.write((char*)&grid, sizeof(grid));
+            save.close();
             do
             {
-                for (int x = 0; x < 2; x++)
+                for (int i = 0; i < 2; i++)
                 {
-                    DropChoice = PlayerDrop(grid, player[x], id[x]);
-                    CheckBellow(grid, id[x], DropChoice);
-                    //sejvanje ploče
+                    DropChoice = PlayerDrop(grid, player[i], id[i]);
+                    CheckBellow(grid, id[i], DropChoice);
                     ofstream saveGrid("saveGrid.bin", ios::binary | ios::out);
                     saveGrid.write((char*)&grid, sizeof(grid));
                     saveGrid.close();
                     system("cls");
                     ShowGrid(grid);
-                    flag.win[x] = Check4(grid, id[x], flag,x);
-                    if (flag.win[x] == 1)
+                    win[i] = Check4(grid, id[i], win[i]);
+                    if (win[i] == 1)
                     {
-                        PlayerWin(player[x]);
-                        flag.lastPlayer = x;
+                        PlayerWin(player[i]);
+                        ofstream savePlayer("savePlayer.bin", ios::binary | ios::out);
+                        savePlayer.write((char*)&player[i], sizeof(string));
+                        savePlayer.write((char*)&win[i], sizeof(int));
+                        savePlayer.close();
                         again = Restart(grid);
-                        if (again == 2) {
-                            
+                        if (again == 2)
                             break;
-                        }
-                        
-                            
-                    }
-                    flag.full = FullGrid(grid, flag);
-                    if (flag.full == 8)
-                    {
-                         cout << endl << "\033[32m" << "Ploca je puna, rezultat je izjednacen!" << "\033[0m" << endl;
-                         again = Restart(grid);
-                         if (again == 2) {
-                             //spremanje zastavica
-                             
-                             break;
-                         }
                     }
                 }
-                
+                full = FullGrid(grid);
+                if (full == 8)
+                {
+                    cout << endl << "\033[32m" << "Ploca je puna, rezultat je izjednacen!" << "\033[0m" << endl;
+                    again = Restart(grid);
+                }
             } while (again != 2);
         }
         else if (choiceMenu == "3") {
-
             ifstream saveGrid("saveGrid.bin", ios::binary | ios::in);
             saveGrid.read((char*)&grid, sizeof(grid));
             saveGrid.close();
             system("cls");
-            //ShowGrid(grid);
-
-            ifstream saveFlags("saveFlag.bin", ios::binary | ios::in);
-            saveFlags.read((char*)&flag, sizeof(info));
-            saveFlags.close();
-
-            if (flag.full == 1) {
-                ShowGrid(grid);
-                cout << endl << "\033[32m" << "Rezultat je nerijesen." << "\033[0m" << endl;
-            }
-            //ShowGrid(grid);
-            ifstream savePlayers("savePlayers.bin", ios::binary | ios::in);
-            player[0].resize(32);
-            player[1].resize(32);
-            for (int i = 0; i < 2; i++){
-                savePlayers.read((char*)&player[i][0], 32);
-                cout << player[i] << endl;
-            }
-            savePlayers.close();
-            //ShowGrid(grid);
-
+            ShowGrid(grid);
+            int* win;
+            ifstream savePlayer("savePlayer.bin", ios::binary | ios::in);
             for (int i = 0; i < 2; i++)
             {
-                if (flag.win[i] == 1){
-                    ShowGrid(grid);
+                savePlayer.read((char*)&win[i], sizeof(int));
+                if (win[i] == 1)
                     PlayerWin(player[i]);
-                    again = Restart(grid);
-                }
             }
-            
-            //ShowGrid(grid);
-            cout << flag.lastPlayer << endl;
-            cout << flag.full << endl;
-            
-            
-
+            savePlayer.close();
+         
 
             
             
-            
+
         }
         else if (choiceMenu == "4") {
 
@@ -201,7 +165,3 @@ int main()
         system("pause");
     }
 }
-
-//još samo save & load :(
-//https://www.thiscodeworks.com/game-connect-four-connect-four-is-a-two-player-board-game-in-which-the-players-alternately-drop-colored-disks-into-a/5ffdf8a20c8c140014566a1c
-//https://gist.github.com/MichaelEstes/7836988
