@@ -3,10 +3,7 @@
 #include <windows.h>
 using namespace std;
 
-struct PlayerInfo {
-    string Name;
-    char ID;
-};
+
 
 void Headline()
 {
